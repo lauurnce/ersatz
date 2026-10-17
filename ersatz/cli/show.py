@@ -1,7 +1,9 @@
-"""Plain text output for provider records and normalized parts."""
+"""Rich output for provider records and normalized parts. Values print verbatim."""
 
-import typer
+from rich.console import Console
+from rich.markup import escape
 
+from ersatz.cli.output import console, styled
 from ersatz.model import Parameter
 from ersatz.normalize import Normalized
 from ersatz.providers import ProviderRecord
@@ -20,9 +22,10 @@ def parameter_line(p: Parameter) -> str:
     return text
 
 
-def print_record(record: ProviderRecord) -> None:
+def print_record(record: ProviderRecord, out: Console | None = None) -> None:
+    out = out or console()
     s = record.source
-    typer.echo(f"{record.mpn}  ({record.manufacturer})")
+    out.print(f"[bold]{escape(record.mpn)}[/]  ({escape(record.manufacturer)})")
     rows = [
         ("lifecycle", record.raw_lifecycle),
         ("last buy", record.raw_last_buy),
@@ -33,33 +36,35 @@ def print_record(record: ProviderRecord) -> None:
     ]
     for label, value in rows:
         if value is not None:
-            typer.echo(f"  {label:<10} {value}")
+            shown = styled(value) if label == "lifecycle" else escape(value)
+            out.print(f"  {label:<10} {shown}")
     for name, value in record.raw_parameters.items():
-        typer.echo(f"  - {name}: {value}")
-    typer.echo(
+        out.print(f"  - {name}: {value}", markup=False)
+    out.print(
         f"  source     {s.provider} response {(s.response_id or '')[:12]} "
         f"retrieved {s.retrieved_at:%Y-%m-%d %H:%M} UTC"
     )
     if s.url:
-        typer.echo(f"             {s.url}")
+        out.print(f"             {s.url}", markup=False)
 
 
-def print_normalized(result: Normalized) -> None:
+def print_normalized(result: Normalized, out: Console | None = None) -> None:
+    out = out or console()
     part = result.part
     category = part.category.value.value if part.category else result.category.status
-    typer.echo("  normalized")
-    typer.echo(f"    category   {category} ({result.category.reason})")
-    typer.echo(f"    lifecycle  {', '.join(s.value.value for s in part.lifecycle)}")
+    out.print("  normalized", markup=False)
+    out.print(f"    category   {category} ({result.category.reason})", markup=False)
+    out.print(f"    lifecycle  {', '.join(s.value.value for s in part.lifecycle)}", markup=False)
     if part.package is not None:
         group = part.package.group or "UNKNOWN"
-        typer.echo(f"    package    {group} ({result.package.reason})")
+        out.print(f"    package    {group} ({result.package.reason})", markup=False)
     for p in part.parameters.values():
-        typer.echo(f"    {parameter_line(p)}")
+        out.print(f"    {parameter_line(p)}", markup=False)
     for name, raw in part.unparsed.items():
-        typer.echo(f"    unparsed   {name}: {raw.value}")
+        out.print(f"    unparsed   {name}: {raw.value}", markup=False)
     for note in result.notes:
-        typer.echo(f"    note       {note}")
-    typer.echo(
+        out.print(f"    note       {note}", markup=False)
+    out.print(
         f"    source     every value above: {part.mpn.source.provider} response "
         f"{(part.mpn.source.response_id or '')[:12]}"
     )

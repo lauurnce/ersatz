@@ -19,7 +19,7 @@ def fake_provider(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> Iterator[N
         json_response(200, "productdetails_ldo.json"), json_response(404, "error_404.json")
     )
     provider, _, _ = make_digikey(router)
-    monkeypatch.setattr("ersatz.cli.lookup.build_digikey", lambda *a, **k: provider)
+    monkeypatch.setattr("ersatz.cli.output.build_providers", lambda *a, **k: [provider])
     monkeypatch.setenv("ERSATZ_CACHE_DIR", str(tmp_path))
     get_settings.cache_clear()
     yield
@@ -28,11 +28,12 @@ def fake_provider(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> Iterator[N
 
 def test_text_output_shows_source_and_notice() -> None:
     result = CliRunner().invoke(app, ["lookup", "TEST-LDO33", "TEST-NOPE"])
-    assert result.exit_code == 0, result.output
+    assert result.exit_code == 4, result.output
     assert "TEST-LDO33  (Test Semiconductor)" in result.output
     assert "source     digikey response" in result.output
     assert "TEST-NOPE (as entered)  NOT FOUND at digikey" in result.output
     assert result.output.strip().endswith(NOTICE)
+    assert "Notice:" in result.output
 
 
 def test_json_output_carries_notice() -> None:
