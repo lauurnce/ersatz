@@ -1,0 +1,340 @@
+{
+  "_fixture": "synthetic, Digi-Key Product Information v4 Product shapes for verify, check and find tests. Invented values, TEST- part numbers.",
+  "Products": [
+    {
+      "Description": {
+        "ProductDescription": "IC REG LINEAR 3.3V 300mA SOT-23-5"
+      },
+      "Manufacturer": {
+        "Id": 9100,
+        "Name": "Test Semiconductor"
+      },
+      "ManufacturerProductNumber": "TEST-LDO50-OLD",
+      "ProductUrl": "https://www.digikey.com/en/products/detail/test/TEST-LDO50-OLD/1",
+      "DatasheetUrl": "https://example.com/datasheets/test-ldo50-old.pdf",
+      "QuantityAvailable": 0,
+      "ProductStatus": {
+        "Id": 0,
+        "Status": "Obsolete"
+      },
+      "DateLastBuyChance": null,
+      "Category": {
+        "CategoryId": 699,
+        "Name": "Voltage Regulators - Linear, Low Drop Out (LDO) Regulators",
+        "ChildCategories": []
+      },
+      "Parameters": [
+        {
+          "ParameterId": 3000,
+          "ParameterText": "Voltage - Input (Min)",
+          "ValueId": "0",
+          "ValueText": "2.5V"
+        },
+        {
+          "ParameterId": 3001,
+          "ParameterText": "Voltage - Input (Max)",
+          "ValueId": "1",
+          "ValueText": "6V"
+        },
+        {
+          "ParameterId": 3002,
+          "ParameterText": "Voltage - Output (Min/Fixed)",
+          "ValueId": "2",
+          "ValueText": "3.3V"
+        },
+        {
+          "ParameterId": 3003,
+          "ParameterText": "Current - Output",
+          "ValueId": "3",
+          "ValueText": "300mA"
+        },
+        {
+          "ParameterId": 3004,
+          "ParameterText": "Voltage Dropout (Max)",
+          "ValueId": "4",
+          "ValueText": "0.35V @ 300mA"
+        },
+        {
+          "ParameterId": 3005,
+          "ParameterText": "Current - Quiescent (Iq)",
+          "ValueId": "5",
+          "ValueText": "55 µA"
+        },
+        {
+          "ParameterId": 3006,
+          "ParameterText": "Supplier Device Package",
+          "ValueId": "6",
+          "ValueText": "SOT-23-5"
+        }
+      ]
+    },
+    {
+      "Description": {
+        "ProductDescription": "IC REG LINEAR 3.3V 500mA SOT-23-5"
+      },
+      "Manufacturer": {
+        "Id": 9100,
+        "Name": "Alpha Test Devices"
+      },
+      "ManufacturerProductNumber": "TEST-LDO50-A",
+      "ProductUrl": "https://www.digikey.com/en/products/detail/test/TEST-LDO50-A/1",
+      "DatasheetUrl": "https://example.com/datasheets/test-ldo50-a.pdf",
+      "QuantityAvailable": 2400,
+      "ProductStatus": {
+        "Id": 0,
+        "Status": "Active"
+      },
+      "DateLastBuyChance": null,
+      "Category": {
+        "CategoryId": 699,
+        "Name": "Voltage Regulators - Linear, Low Drop Out (LDO) Regulators",
+        "ChildCategories": []
+      },
+      "Parameters": [
+        {
+          "ParameterId": 3000,
+          "ParameterText": "Voltage - Input (Min)",
+          "ValueId": "0",
+          "ValueText": "2.5V"
+        },
+        {
+          "ParameterId": 3001,
+          "ParameterText": "Voltage - Input (Max)",
+          "ValueId": "1",
+          "ValueText": "6V"
+        },
+        {
+          "ParameterId": 3002,
+          "ParameterText": "Voltage - Output (Min/Fixed)",
+          "ValueId": "2",
+          "ValueText": "3.3V"
+        },
+        {
+          "ParameterId": 3003,
+          "ParameterText": "Current - Output",
+          "ValueId": "3",
+          "ValueText": "500mA"
+        },
+        {
+          "ParameterId": 3004,
+          "ParameterText": "Voltage Dropout (Max)",
+          "ValueId": "4",
+          "ValueText": "0.25V @ 300mA"
+        },
+        {
+          "ParameterId": 3005,
+          "ParameterText": "Current - Quiescent (Iq)",
+          "ValueId": "5",
+          "ValueText": "40 µA"
+        },
+        {
+          "ParameterId": 3006,
+          "ParameterText": "Supplier Device Package",
+          "ValueId": "6",
+          "ValueText": "SOT-23-5"
+        }
+      ]
+    },
+    {
+      "Description": {
+        "ProductDescription": "IC REG LINEAR 3.3V 300mA SOT-23-5"
+      },
+      "Manufacturer": {
+        "Id": 9100,
+        "Name": "Beta Test Devices"
+      },
+      "ManufacturerProductNumber": "TEST-LDO50-B",
+      "ProductUrl": "https://www.digikey.com/en/products/detail/test/TEST-LDO50-B/1",
+      "DatasheetUrl": "https://example.com/datasheets/test-ldo50-b.pdf",
+      "QuantityAvailable": 9000,
+      "ProductStatus": {
+        "Id": 0,
+        "Status": "Active"
+      },
+      "DateLastBuyChance": null,
+      "Category": {
+        "CategoryId": 699,
+        "Name": "Voltage Regulators - Linear, Low Drop Out (LDO) Regulators",
+        "ChildCategories": []
+      },
+      "Parameters": [
+        {
+          "ParameterId": 3000,
+          "ParameterText": "Voltage - Input (Min)",
+          "ValueId": "0",
+          "ValueText": "2.5V"
+        },
+        {
+          "ParameterId": 3001,
+          "ParameterText": "Voltage - Input (Max)",
+          "ValueId": "1",
+          "ValueText": "6V"
+        },
+        {
+          "ParameterId": 3002,
+          "ParameterText": "Voltage - Output (Min/Fixed)",
+          "ValueId": "2",
+          "ValueText": "3.3V"
+        },
+        {
+          "ParameterId": 3003,
+          "ParameterText": "Current - Output",
+          "ValueId": "3",
+          "ValueText": "300mA"
+        },
+        {
+          "ParameterId": 3004,
+          "ParameterText": "Voltage Dropout (Max)",
+          "ValueId": "4",
+          "ValueText": "0.6V @ 300mA"
+        },
+        {
+          "ParameterId": 3005,
+          "ParameterText": "Current - Quiescent (Iq)",
+          "ValueId": "5",
+          "ValueText": "55 µA"
+        },
+        {
+          "ParameterId": 3006,
+          "ParameterText": "Supplier Device Package",
+          "ValueId": "6",
+          "ValueText": "SOT-23-5"
+        }
+      ]
+    },
+    {
+      "Description": {
+        "ProductDescription": "IC REG LINEAR 3.3V 300mA SOT-23-5"
+      },
+      "Manufacturer": {
+        "Id": 9100,
+        "Name": "Sample Devices"
+      },
+      "ManufacturerProductNumber": "TEST-LDO50-X",
+      "ProductUrl": "https://www.digikey.com/en/products/detail/test/TEST-LDO50-X/1",
+      "DatasheetUrl": "https://example.com/datasheets/test-ldo50-x.pdf",
+      "QuantityAvailable": 12,
+      "ProductStatus": {
+        "Id": 0,
+        "Status": "Obsolete"
+      },
+      "DateLastBuyChance": null,
+      "Category": {
+        "CategoryId": 699,
+        "Name": "Voltage Regulators - Linear, Low Drop Out (LDO) Regulators",
+        "ChildCategories": []
+      },
+      "Parameters": [
+        {
+          "ParameterId": 3000,
+          "ParameterText": "Voltage - Input (Min)",
+          "ValueId": "0",
+          "ValueText": "2.5V"
+        },
+        {
+          "ParameterId": 3001,
+          "ParameterText": "Voltage - Input (Max)",
+          "ValueId": "1",
+          "ValueText": "6V"
+        },
+        {
+          "ParameterId": 3002,
+          "ParameterText": "Voltage - Output (Min/Fixed)",
+          "ValueId": "2",
+          "ValueText": "3.3V"
+        },
+        {
+          "ParameterId": 3003,
+          "ParameterText": "Current - Output",
+          "ValueId": "3",
+          "ValueText": "300mA"
+        },
+        {
+          "ParameterId": 3004,
+          "ParameterText": "Voltage Dropout (Max)",
+          "ValueId": "4",
+          "ValueText": "0.35V @ 300mA"
+        },
+        {
+          "ParameterId": 3005,
+          "ParameterText": "Current - Quiescent (Iq)",
+          "ValueId": "5",
+          "ValueText": "55 µA"
+        },
+        {
+          "ParameterId": 3006,
+          "ParameterText": "Supplier Device Package",
+          "ValueId": "6",
+          "ValueText": "SOT-23-5"
+        }
+      ]
+    },
+    {
+      "Description": {
+        "ProductDescription": "IC REG LINEAR 3.3V 300mA SOT-89-3"
+      },
+      "Manufacturer": {
+        "Id": 9100,
+        "Name": "Test Semiconductor"
+      },
+      "ManufacturerProductNumber": "TEST-LDO50-C",
+      "ProductUrl": "https://www.digikey.com/en/products/detail/test/TEST-LDO50-C/1",
+      "DatasheetUrl": "https://example.com/datasheets/test-ldo50-c.pdf",
+      "QuantityAvailable": 500,
+      "ProductStatus": {
+        "Id": 0,
+        "Status": "Active"
+      },
+      "DateLastBuyChance": null,
+      "Category": {
+        "CategoryId": 699,
+        "Name": "Voltage Regulators - Linear, Low Drop Out (LDO) Regulators",
+        "ChildCategories": []
+      },
+      "Parameters": [
+        {
+          "ParameterId": 3000,
+          "ParameterText": "Voltage - Input (Min)",
+          "ValueId": "0",
+          "ValueText": "2.5V"
+        },
+        {
+          "ParameterId": 3001,
+          "ParameterText": "Voltage - Input (Max)",
+          "ValueId": "1",
+          "ValueText": "6V"
+        },
+        {
+          "ParameterId": 3002,
+          "ParameterText": "Voltage - Output (Min/Fixed)",
+          "ValueId": "2",
+          "ValueText": "3.3V"
+        },
+        {
+          "ParameterId": 3003,
+          "ParameterText": "Current - Output",
+          "ValueId": "3",
+          "ValueText": "300mA"
+        },
+        {
+          "ParameterId": 3004,
+          "ParameterText": "Voltage Dropout (Max)",
+          "ValueId": "4",
+          "ValueText": "0.35V @ 300mA"
+        },
+        {
+          "ParameterId": 3005,
+          "ParameterText": "Current - Quiescent (Iq)",
+          "ValueId": "5",
+          "ValueText": "55 µA"
+        },
+        {
+          "ParameterId": 3006,
+          "ParameterText": "Supplier Device Package",
+          "ValueId": "6",
+          "ValueText": "SOT-89-3"
+        }
+      ]
+    }
+  ]
+}
