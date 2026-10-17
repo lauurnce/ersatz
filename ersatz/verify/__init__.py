@@ -1,5 +1,5 @@
-"""Verdicts for a suggested replacement.
+"""Verify a suggested replacement: VERIFIED, PARTIAL, MISMATCH or NOT FOUND."""
 
-Returns VERIFIED, PARTIAL, MISMATCH or NOT FOUND, always with the
-engineer validation notice.
-"""
+from ersatz.verify.verify import Verdict, VerifyError, VerifyResult, decide, verify
+
+__all__ = ["Verdict", "VerifyError", "VerifyResult", "decide", "verify"]
