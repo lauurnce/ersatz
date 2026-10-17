@@ -1,0 +1,20 @@
+# Function rules for op-amps. Mirrors docs/DOMAIN.md section 4.
+# Same fields as match_ldo.yaml. Extra kinds:
+#   feature_implies  if O has the feature, C must have it
+#   stable_gain      C minimum stable gain <= O; unity-gain stable counts as 1
+#   per_channel      quiescent current per channel, from iq_per_channel or iq / channels
+# far_above: WARN when C is more than this many times O (OPA-03 stability margin).
+version: 1
+category: opamp
+rules:
+  - {id: OPA-01, param: channels, kind: equal, slots: [typ, min, max], broken: FAIL, weight: 3, sources: [P1]}
+  - {id: OPA-02, param: vsupply, kind: contains, broken: FAIL, weight: 3, sources: [P2, P3]}
+  - {id: OPA-03, param: gbw, kind: higher, slots: [min, typ], broken: FAIL, far_above: 10, weight: 2, sources: [P2]}
+  - {id: OPA-04, param: slew_rate, kind: higher, slots: [min, typ], broken: FAIL, weight: 2, sources: [P2]}
+  - {id: OPA-05, param: vos, kind: lower, slots: [max, typ], broken: WARN, weight: 1, sources: [P2, P4]}
+  - {id: OPA-06, param: ibias, kind: lower, slots: [max, typ], broken: WARN, weight: 1, sources: [P2]}
+  - {id: OPA-07, param: rail_to_rail_input, kind: feature_implies, broken: FAIL, weight: 2, sources: [P2, P4, P5]}
+  - {id: OPA-08, param: rail_to_rail_output, kind: feature_implies, broken: FAIL, weight: 2, sources: [P2, P5]}
+  - {id: OPA-10, param: vnoise, kind: lower, slots: [max, typ], condition: f, broken: WARN, weight: 1, sources: [P2, P3]}
+  - {id: OPA-11, param: min_stable_gain, kind: stable_gain, broken: FAIL, weight: 2, sources: [P2, P6]}
+  - {id: OPA-12, param: iq_per_channel, kind: per_channel, slots: [max, typ], broken: WARN, weight: 1, sources: [P2, P4]}
