@@ -3,6 +3,7 @@
 import typer
 
 from ersatz import __version__
+from ersatz.cli.find import find_command
 from ersatz.cli.lookup import lookup as lookup_command
 
 app = typer.Typer(
@@ -24,3 +25,4 @@ def version() -> None:
 
 
 app.command(name="lookup")(lookup_command)
+app.command(name="find")(find_command)
