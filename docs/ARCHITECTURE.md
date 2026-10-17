@@ -236,18 +236,16 @@ AnthropicClient uses structured outputs (output_config.format) with explicit eff
 ### ersatz.match
 
 ```python
-class RuleResult(BaseModel):
-    rule_id: str; status: Literal["PASS", "WARN", "FAIL", "UNKNOWN"]
-    original: Parameter | None; candidate: Parameter | None
-    reason: str; domain_refs: tuple[str, ...]
-
-def score_form(o: Part, c: Part) -> FormResult
-def score_fit(o: Part, c: Part) -> FitResult                           # DROP_IN, SAME_PACKAGE_REWIRE, NO, UNKNOWN
-def score_function(o: Part, c: Part, rules: RuleSet) -> list[RuleResult]
-def compare(o: Part, c: Part) -> Comparison                            # all of the above plus the diff
+def profile(part: Part, extraction: Extraction | None = None) -> PartProfile   # provider values, HIGH datasheet values win
+def hard_filters(o: PartProfile, c: PartProfile) -> HardFilters               # form, fit (DROP_IN, SAME_PACKAGE_REWIRE, NO, UNKNOWN), lifecycle
+def evaluate(rule: Rule, o: PartProfile, c: PartProfile) -> RuleResult        # PASS, WARN, FAIL, UNKNOWN, N/A
+def score_candidate(o: PartProfile, c: PartProfile) -> CandidateScore         # filters, rule results, score, diff rows
+def rank(o: PartProfile, cs: list[PartProfile]) -> MatchReport                # ranked and excluded, with reasons
+def find_candidates(original: Part, providers, cap=25) -> SearchResult        # parametric, else keyword (D-036)
+def find(mpn: str, providers, manufacturer=None, top=5) -> FindResult         # resolve, search, rank; carries the notice
 ```
 
-Rules are loaded from rules/ldo.yaml and rules/opamp.yaml. Each rule row has the ID used in DOMAIN.md, so a diff line links to its cited source.
+Rules are loaded from rules/match_ldo.yaml and rules/match_opamp.yaml. Each row keeps its DOMAIN.md ID, kind, columns to compare, condition key, weight and source IDs. A diff row holds parameter, original value, candidate value, verdict, rule ID, reason with the better direction, and both sources. `ersatz find` prints the top candidates with their diffs; `--json` prints the same structure.
 
 ### ersatz.candidates, ersatz.verify
 
