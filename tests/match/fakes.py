@@ -4,16 +4,19 @@ from ersatz.providers.base import Capability, ParametricQuery, ProviderRecord
 from ersatz.providers.errors import NotSupportedError
 from tests.match.parts import source
 
+LDO_CATEGORY = "Voltage Regulators - Linear, Low Drop Out (LDO) Regulators"
+OPAMP_CATEGORY = "Instrumentation, Op Amps, Buffer Amps"
+
 
 def record(
     mpn: str,
     manufacturer: str = "Test Semi",
-    category: str = "PMIC - Voltage Regulators - Linear, Low Drop Out (LDO) Regulators",
+    category: str = LDO_CATEGORY,
     package: str = "SOT-23-5",
     lifecycle: str = "Active",
     parameters: dict[str, str] | None = None,
     stock: int = 100,
-    provider: str = "fake",
+    provider: str = "digikey",
 ) -> ProviderRecord:
     return ProviderRecord(
         provider=provider,
@@ -23,7 +26,7 @@ def record(
         raw_last_buy=None,
         raw_category=category,
         raw_package=package,
-        raw_parameters=parameters or {},
+        raw_parameters={"Supplier Device Package": package, **(parameters or {})},
         description=None,
         datasheet_url=None,
         stock=stock,
