@@ -1,0 +1,18 @@
+# Normalizations ersatz.resolve may apply when the part number as entered
+# returns nothing. Mirrors docs/DOMAIN.md section 6b. Nothing outside this
+# file is ever stripped, added or guessed.
+# status: UNVERIFIED rules can find a part, but a verdict that depends on one
+# is never VERIFIED.
+version: 1
+# A Digi-Key part number is often the manufacturer part number plus a
+# packaging code. The code is removed and the rest is looked up exactly.
+distributor_part_numbers:
+  - {id: SFX-DK, provider: digikey, status: UNVERIFIED, suffixes: ["DKR-ND", "CT-ND", "TR-ND", "-ND"],
+     note: "Digi-Reel, cut tape, tape and reel and plain Digi-Key part number codes"}
+# Orderable variants: the provider returns the entered part number plus one
+# of these packaging suffixes, from the named manufacturer only.
+packaging:
+  - {id: SFX-TI, manufacturer: "Texas Instruments", status: UNVERIFIED, suffixes: ["R", "T"],
+     note: "large and small tape and reel"}
+  - {id: SFX-ON, manufacturer: "onsemi", status: UNVERIFIED, suffixes: ["G", "R2G"],
+     note: "Pb-free, and tape and reel Pb-free"}
