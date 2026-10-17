@@ -1,0 +1,26 @@
+# Function rules for LDO regulators. Mirrors docs/DOMAIN.md section 3.
+# kind:
+#   equal      C equals O
+#   contains   C range contains O range (C min <= O min and C max >= O max)
+#   higher     C >= O is better
+#   lower      C <= O is better
+#   feature_equal, cap_stability: see ersatz/match/rules.py
+# slots: columns compared, first one present on both sides wins. A typical
+#   value used where a guaranteed column exists in the list gives WARN at best.
+# condition: condition key that must match on both sides (I current, f frequency).
+# weight: share of the function score (PROPOSED, D-035).
+version: 1
+category: ldo
+rules:
+  - {id: LDO-01, param: adjustable_output, kind: feature_equal, broken: FAIL, weight: 3, sources: [R1]}
+  - {id: LDO-02, param: vout, kind: equal, slots: [typ, min, max], broken: FAIL, weight: 3, unless_original_has: vref, sources: [R1]}
+  - {id: LDO-03, param: vref, kind: equal, slots: [typ, min, max], broken: WARN, weight: 1, if_original_has: vref, sources: [R1]}
+  - {id: LDO-04, param: vin, kind: contains, broken: FAIL, weight: 3, sources: [R2]}
+  - {id: LDO-05, param: vin_abs_max, kind: higher, slots: [max], broken: FAIL, weight: 1, sources: [R2]}
+  - {id: LDO-06, param: vout_accuracy, kind: lower, slots: [max, typ], broken: WARN, weight: 1, sources: [R3]}
+  - {id: LDO-07, param: iout, kind: higher, slots: [max, min, typ], broken: FAIL, weight: 3, sources: [R2]}
+  - {id: LDO-08, param: dropout, kind: lower, slots: [max, typ], condition: I, broken: FAIL, weight: 2, sources: [R3, R4]}
+  - {id: LDO-09, param: iq, kind: lower, slots: [max, typ], broken: WARN, weight: 1, sources: [R3]}
+  - {id: LDO-10, param: ishdn, kind: lower, slots: [max, typ], broken: WARN, weight: 1, sources: [R3]}
+  - {id: LDO-11, param: psrr, kind: higher, slots: [min, typ], condition: f, broken: WARN, weight: 1, sources: [R3, R4]}
+  - {id: LDO-13, param: cout_esr, kind: cap_stability, broken: FAIL, weight: 2, sources: [R5, R6, R7]}
