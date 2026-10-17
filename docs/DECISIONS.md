@@ -260,3 +260,24 @@ Date: 2026-10-17
 Decision: in find mode, a candidate that is not ACTIVE is excluded and listed with its lifecycle status. Verify mode keeps decision 9: an NRND suggestion is PARTIAL and an OBSOLETE one is MISMATCH.
 Reason: the phase asks for an active-lifecycle hard filter. A replacement list that offers NRND parts recreates the problem the user came to solve. Verify mode answers a different question about a part the user already named.
 Alternatives considered: NRND kept with a penalty (still offers a part on its way out), lifecycle as a soft rule (lets stock outweigh status).
+
+## D-038 Resolution order and suffix rules
+
+Date: 2026-10-17
+Decision: ersatz.resolve cleans surrounding markup, looks the part number up exactly, then tries the suffix rules in rules/suffixes.yaml (a Digi-Key packaging code removed, or a manufacturer packaging suffix found by keyword search from that manufacturer only), and otherwise returns NOT FOUND. All three suffix rules are UNVERIFIED for now, so a part found through one is never VERIFIED.
+Reason: users paste distributor part numbers and base part numbers without a packaging suffix, and both name a real part. Listing each rule keeps the step reviewable; everything else stays NOT FOUND, so an invented part number can never resolve to a real one.
+Alternatives considered: fuzzy matching (the failure mode Ersatz exists to catch), no normalization at all (common inputs such as cut-tape part numbers would read as invented).
+
+## D-039 One exit code table for every command
+
+Date: 2026-10-17
+Decision: 0 success or VERIFIED, 1 PARTIAL, 2 usage, configuration or provider error, 3 MISMATCH, 4 NOT FOUND. Commands that report several items exit with the worst one (NOT FOUND, then MISMATCH, then PARTIAL). Every command has --json, and the JSON always carries the notice.
+Reason: scripts and CI jobs can act on the verdict without parsing text. Code 2 matches Click's usage error code.
+Alternatives considered: 0 for any completed run (loses the verdict), separate codes per command (harder to remember).
+
+## D-040 Synthetic catalog for CLI smoke tests
+
+Date: 2026-10-17
+Decision: CLI smoke tests run the real Digi-Key adapter against a synthetic catalog (tests/fixtures/digikey/catalog_ldo50.json) served by a routing mock transport. The "recorded fixtures" in the phase prompt are these synthetic, schema-shaped files, following D-019.
+Reason: real recordings cannot be committed (D-019). Going through the adapter still tests request paths, parsing, caching and normalization.
+Alternatives considered: faking the provider protocol in CLI tests (skips the adapter), local recordings in CI (not allowed, and CI has no keys).
