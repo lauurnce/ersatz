@@ -538,6 +538,32 @@ Ranking: fit (DROP_IN, then SAME_PACKAGE_REWIRE, then UNKNOWN), then fewest FAIL
 
 Not evaluated in v0.1, because no provider field or extracted value feeds them: LDO-12 (line and load regulation), LDO-14 (enable thresholds and polarity), LDO-15 (thermal), OPA-09 (common-mode range). They are absent from the rule files, not scored as PASS.
 
+## 6b. Resolution and verify mode
+
+### Resolving a part number as entered (PROPOSED, D-038)
+
+1. Clean: surrounding whitespace, markdown marks, brackets, quotes and trailing punctuation are removed, and Unicode dashes become "-". Characters inside the part number are never touched.
+2. Exact lookup at every provider. Two manufacturers for one part number is AMBIGUOUS until one is named.
+3. Distributor packaging code (SFX-DK): a trailing Digi-Key code (DKR-ND, CT-ND, TR-ND, -ND) is removed and the rest is looked up exactly at Digi-Key.
+4. Manufacturer packaging suffix (SFX-TI, SFX-ON): a keyword search may return the entered part number plus a listed suffix, from the listed manufacturer only. The orderable variants are named in the result.
+5. Otherwise NOT FOUND. Close matches, edit distance, prefix matches and autocompletion are never used (decision 6).
+
+| Rule | Suffixes | Status |
+|---|---|---|
+| SFX-DK | DKR-ND, CT-ND, TR-ND, -ND at Digi-Key | UNVERIFIED |
+| SFX-TI | R, T from Texas Instruments | UNVERIFIED |
+| SFX-ON | G, R2G from onsemi | UNVERIFIED |
+
+A part found only through an UNVERIFIED rule can be PARTIAL at best, never VERIFIED. Sources for these rows are an open item.
+
+### Verdicts
+
+Decision 9 applies: VERIFIED needs form PASS, fit DROP_IN, every applicable function rule PASS, lifecycle ACTIVE and stock at one provider or more. PARTIAL covers any WARN or UNKNOWN, a rewire fit, NRND or LAST_TIME_BUY, zero stock, an AMBIGUOUS candidate, or a part found through an UNVERIFIED rule. MISMATCH covers any FAIL, a fit of NO, a different category, or an OBSOLETE candidate. NOT FOUND keeps the text exactly as entered.
+
+### Part numbers in pasted text (PROPOSED)
+
+A token is a part number when it is made of capital letters, digits and the joiners - / . # +, has at least one letter and one digit, is 4 to 40 characters long, and is not a value with a unit, a date, a package name from section 2 or a listed specification word (AEC-Q100, I2C, PSRR and similar). Lowercase words are ignored. Every token is resolved as above; none is corrected. `ersatz check` verifies tokens against an original only when the original is given; it never guesses which token is the original.
+
 ## 7. Related work and positioning
 
 - Z2Data argues that general language models return "Non-existent part numbers that follow a plausible naming pattern but were never manufactured" and "can't confirm whether a part number is still active or has entered into NRND" [W1]. It reports no measured error rate.
