@@ -247,24 +247,20 @@ def find(mpn: str, providers, manufacturer=None, top=5) -> FindResult         # 
 
 Rules are loaded from rules/match_ldo.yaml and rules/match_opamp.yaml. Each row keeps its DOMAIN.md ID, kind, columns to compare, condition key, weight and source IDs. A diff row holds parameter, original value, candidate value, verdict, rule ID, reason with the better direction, and both sources. `ersatz find` prints the top candidates with their diffs; `--json` prints the same structure.
 
-### ersatz.candidates, ersatz.verify
+### ersatz.resolve, ersatz.verify
 
 ```python
-def find_candidates(original: Part, providers: Sequence[Provider], limit: int = 20) -> list[Comparison]
-
-class Verdict(StrEnum): VERIFIED; PARTIAL; MISMATCH; NOT_FOUND
-
-class VerifyResult(BaseModel):
-    verdict: Verdict
-    original: Part
-    suggested: Part | None
-    suggested_as_entered: str | None     # only set when NOT_FOUND
-    comparison: Comparison | None
-    reasons: tuple[str, ...]
-    notice: str                          # engineer validation notice, always present
-
-def verify(original_mpn: str, suggested_mpn: str, ctx: Context) -> VerifyResult
+def resolve(as_entered: str, providers, manufacturer=None) -> Resolution          # FOUND, AMBIGUOUS, NOT_FOUND (D-038)
+def verify(original: str, candidate: str, providers) -> VerifyResult               # VERIFIED, PARTIAL, MISMATCH, NOT FOUND
+def extract_mpns(text: str) -> list[str]                                           # part numbers in pasted text
+def check_text(text: str, providers, original=None) -> CheckReport                 # every mention, verified or looked up
 ```
+
+verify uses ersatz.match for the comparison and applies decision 9 in decide(). A NOT FOUND result keeps the text as entered and has no score.
+
+### CLI
+
+`ersatz lookup MPN...`, `ersatz find MPN`, `ersatz verify ORIGINAL CANDIDATE`, `ersatz check [--original MPN] < answer.txt` and `ersatz extract URL --category ldo|opamp`. Output is rich text with a diff table per candidate; `--json` prints the model. Exit codes follow D-039. Providers come from one factory, ersatz.cli.output.build_providers, which tests replace.
 
 ### ersatz.bench
 
