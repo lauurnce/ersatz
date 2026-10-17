@@ -508,6 +508,36 @@ Text layer findings from the gold set (CITED by observation of the PDFs listed i
 - [X19] Texas Instruments SZZA036C, Understanding and Interpreting Standard-Logic Data Sheets: https://www.ti.com/document-viewer/lit/html/SZZA036
 - [X20] World Bank AI4Data cookbook, scanned documents: https://worldbank.github.io/ai4data/cookbook/data-from-documents/scanned
 
+## 6a. Matching
+
+How the rules in sections 2 to 4 combine into a ranked candidate list. Rule files: ersatz/rules/match_ldo.yaml and match_opamp.yaml, one row per rule ID above.
+
+### Hard filters (find mode)
+
+| Filter | Pass | Excluded | Kept but flagged | Status |
+|---|---|---|---|---|
+| FORM | same footprint-equivalence group (section 2) | different group | group unknown on either side (UNKNOWN); same group but taller body (WARN) | CITED groups, PROPOSED height check |
+| FIT | same pin count and the same pin function map (DROP_IN) | different pin count, different pin functions, or a tab or pad on a different net (LDO-16) | same functions on different pins (SAME_PACKAGE_REWIRE); no pinout on either side (UNKNOWN) | PROPOSED, decision 14 |
+| LIFECYCLE | ACTIVE | NRND, LAST_TIME_BUY, OBSOLETE, UNKNOWN | none | PROPOSED (D-037) |
+
+Fit details (PROPOSED): identical channels of a multi-channel op-amp may be swapped, so a dual whose channel A sits on pins 5 to 7 is still DROP_IN. Offset null pins count as NC with a note, following the TL071 "Do not connect" wording (section 4). A pinout is never assumed from the package, so provider data without a pin table scores fit UNKNOWN.
+
+### Function score (PROPOSED, D-035)
+
+Each function rule returns PASS, WARN, FAIL, UNKNOWN or N/A. N/A means the rule does not apply to the original, for example LDO-02 for an adjustable part. The function score is the weighted share of points over the rules that apply: PASS 1, WARN 0.5, FAIL 0, UNKNOWN 0. UNKNOWN scoring 0 keeps a candidate with missing data below one with the same data present.
+
+| Weight | LDO rules | Op-amp rules |
+|---|---|---|
+| 3 | LDO-01, LDO-02, LDO-04, LDO-07 | OPA-01, OPA-02 |
+| 2 | LDO-08, LDO-13 | OPA-03, OPA-04, OPA-07, OPA-08, OPA-11 |
+| 1 | LDO-03, LDO-05, LDO-06, LDO-09, LDO-10, LDO-11 | OPA-05, OPA-06, OPA-10, OPA-12 |
+
+Weights follow the result if broken: rules that would leave the circuit not working (output voltage, input range, output current, channels, supply range) weigh 3, other FAIL rules 2, WARN rules 1. They order candidates; they never turn a FAIL into a pass.
+
+Ranking: fit (DROP_IN, then SAME_PACKAGE_REWIRE, then UNKNOWN), then fewest FAIL results, then highest function score, then highest stock, then part number. Stock never outranks a FAIL.
+
+Not evaluated in v0.1, because no provider field or extracted value feeds them: LDO-12 (line and load regulation), LDO-14 (enable thresholds and polarity), LDO-15 (thermal), OPA-09 (common-mode range). They are absent from the rule files, not scored as PASS.
+
 ## 7. Related work and positioning
 
 - Z2Data argues that general language models return "Non-existent part numbers that follow a plausible naming pattern but were never manufactured" and "can't confirm whether a part number is still active or has entered into NRND" [W1]. It reports no measured error rate.
