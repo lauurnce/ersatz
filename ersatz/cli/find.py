@@ -1,78 +1,56 @@
 """ersatz find: ranked replacement candidates with diffs and sources."""
 
-import json
 from collections.abc import Sequence
 from typing import Annotated
 
 import typer
 
 from ersatz.cache import SqliteCache
+from ersatz.cli import output
+from ersatz.cli.output import EXIT_ERROR, EXIT_NOT_FOUND, styled
+from ersatz.cli.tables import diff_table
 from ersatz.match import display
 from ersatz.match.find import FindError, FindResult, find
 from ersatz.match.rules import Verdict
 from ersatz.providers import ProviderError
 from ersatz.providers.base import Provider
-from ersatz.providers.factory import build_digikey
 from ersatz.settings import get_settings
 
 _VERDICTS = (Verdict.FAIL, Verdict.WARN, Verdict.UNKNOWN, Verdict.PASS, Verdict.NA)
-COLUMNS = ("parameter", "original", "candidate", "verdict", "rule", "source O", "source C")
 
 
-def _table(rows: list[tuple[str, ...]]) -> list[str]:
-    widths = [min(max(len(r[i]) for r in rows), 44) for i in range(len(rows[0]))]
-
-    def cell(text: str, width: int) -> str:
-        return (text if len(text) <= width else text[: width - 1] + "~").ljust(width)
-
-    return ["  " + " | ".join(cell(c, w) for c, w in zip(r, widths, strict=True)) for r in rows]
-
-
-def render(result: FindResult) -> str:
+def show(result: FindResult) -> None:
+    out = output.console()
     o = result.original
     lifecycle = o.part.lifecycle[0].source if o.part.lifecycle else None
-    lines = [
+    out.print(
         f"Original: {o.mpn} ({o.manufacturer}), {o.category.value if o.category else '-'}, "
-        f"{o.lifecycle.value} [{display.source(lifecycle)}]",
-        f"Package: {o.package.raw_name if o.package else '-'} "
-        f"({o.package.group if o.package else '-'})",
+        f"{styled(o.lifecycle.value)} [dim][{display.source(lifecycle)}][/]"
+    )
+    pkg = o.package
+    out.print(f"Package: {pkg.raw_name if pkg else '-'} ({pkg.group if pkg else '-'})")
+    out.print(
         f"Searched {result.candidates_searched} candidates; "
         f"{len(result.report.ranked)} passed the hard filters, "
-        f"{len(result.report.excluded)} excluded.",
-    ]
-    lines += [f"Query: {q}" for q in result.queries]
-    lines += [f"Note: {n}" for n in result.notes]
+        f"{len(result.report.excluded)} excluded."
+    )
+    for query in result.queries:
+        out.print(f"[dim]Query: {query}[/]")
+    for note in result.notes:
+        out.print(f"[dim]Note: {note}[/]")
     for n, c in enumerate(result.top, start=1):
-        counts = ", ".join(f"{c.count(v)} {v.value}" for v in _VERDICTS if c.count(v))
-        lines += [
-            "",
-            f"{n}. {c.mpn} ({c.manufacturer})  fit {c.filters.fit.fit.value}  "
-            f"function score {c.score:.2f}  stock {c.stock}",
-            f"   {counts}",
-        ]
-        rows: list[tuple[str, ...]] = [
-            COLUMNS,
-            *[
-                (
-                    r.parameter,
-                    r.original,
-                    r.candidate,
-                    r.verdict,
-                    r.rule,
-                    r.original_source,
-                    r.candidate_source,
-                )
-                for r in c.diff
-            ],
-        ]
-        lines += _table(rows)
+        counts = ", ".join(f"{c.count(v)} {styled(v.value)}" for v in _VERDICTS if c.count(v))
+        out.print(
+            f"\n[bold]{n}. {c.mpn}[/] ({c.manufacturer})  fit {styled(c.filters.fit.fit.value)}  "
+            f"function score {c.score:.2f}  stock {c.stock}"
+        )
+        out.print(f"   {counts}")
+        out.print(diff_table(c))
     if result.report.excluded:
-        lines += ["", "Excluded:"]
-        lines += [
-            f"  {e.mpn} ({e.manufacturer}): {'; '.join(e.reasons)}" for e in result.report.excluded
-        ]
-    lines += ["", f"Notice: {result.notice}"]
-    return "\n".join(lines)
+        out.print("\nExcluded:")
+        for e in result.report.excluded:
+            out.print(f"  {e.mpn} ({e.manufacturer}): {'; '.join(e.reasons)}")
+    output.notice_line(out)
 
 
 def run_find(
@@ -85,13 +63,15 @@ def run_find(
 ) -> None:
     try:
         result = find(mpn, providers, manufacturer=manufacturer, top=top, cap=cap)
-    except (FindError, ProviderError) as exc:
-        typer.echo(f"error: {exc}", err=True)
-        raise typer.Exit(2) from exc
+    except FindError as exc:
+        code = EXIT_NOT_FOUND if "NOT FOUND" in str(exc) else EXIT_ERROR
+        raise output.fail(str(exc), code) from exc
+    except ProviderError as exc:
+        raise output.fail(str(exc)) from exc
     if as_json:
-        typer.echo(json.dumps(result.model_dump(mode="json"), indent=2))
+        output.emit_json(result)
     else:
-        typer.echo(render(result))
+        show(result)
 
 
 def find_command(
@@ -107,8 +87,7 @@ def find_command(
     settings = get_settings()
     cache = SqliteCache(settings.ersatz_cache_dir / "ersatz.sqlite")
     try:
-        providers: list[Provider] = [build_digikey(settings, cache)]
+        providers = output.build_providers(settings, cache)
     except ProviderError as exc:
-        typer.echo(f"error: {exc}", err=True)
-        raise typer.Exit(2) from exc
+        raise output.fail(str(exc)) from exc
     run_find(mpn, providers, manufacturer, top, cap, as_json)

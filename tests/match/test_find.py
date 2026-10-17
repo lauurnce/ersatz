@@ -7,7 +7,7 @@ import pytest
 from typer.testing import CliRunner
 
 from ersatz.cli import app
-from ersatz.cli.find import render, run_find
+from ersatz.cli.find import run_find, show
 from ersatz.match.filters import Fit
 from ersatz.match.find import FindError, find
 from ersatz.settings import Settings
@@ -79,8 +79,9 @@ def test_uncategorized_original_is_rejected() -> None:
         find("TEST-ODD", [FakeProvider("digikey", [odd])])
 
 
-def test_render_shows_diff_sources_and_notice() -> None:
-    text = render(find("TEST-LDO-OLD", [provider()]))
+def test_show_prints_diff_sources_and_notice(capsys: pytest.CaptureFixture[str]) -> None:
+    show(find("TEST-LDO-OLD", [provider()]))
+    text = capsys.readouterr().out
     assert "1. TEST-LDO-A (Alpha Test)  fit UNKNOWN" in text
     assert "dropout" in text
     assert "LDO-08" in text
