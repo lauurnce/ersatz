@@ -239,3 +239,24 @@ Date: 2026-11-10
 Decision: tests use small PDFs generated in the suite and synthetic page text stored under tests/fixtures/datasheets/, with TEST- part numbers and invented values. Real datasheet text stays in the local cache. The live run uses the real PDFs.
 Reason: same reasoning as D-019. Datasheet text is the manufacturer's copyrighted material and does not belong in a public repository.
 Alternatives considered: trimmed excerpts of real datasheets (redistribution), no stored text (tests would miss the layout of real tables).
+
+## D-035 Function score weights
+
+Date: 2026-10-17
+Decision: function rules carry weights 3, 2 and 1 (docs/DOMAIN.md section 6a). The score is the weighted share of points over rules that apply, with PASS 1, WARN 0.5, FAIL and UNKNOWN 0. Candidates are ranked by fit, then by the number of FAIL results, then by score. Every rule result stays visible in the diff.
+Reason: a single number is needed to order candidates, but a weighted score alone would hide a failed rule behind many passes (the concern in D-017). Counting FAIL results before the score keeps that from happening.
+Alternatives considered: equal weights (output voltage would count the same as quiescent current), a pure lexicographic order by rule ID (no way to tell two clean candidates apart), learned weights (no labeled data).
+
+## D-036 Keyword search until parametric search is mapped
+
+Date: 2026-10-17
+Decision: candidate search asks each provider for parametric search with the original's category, footprint group and key values. When a provider raises NotSupported, as Digi-Key does until its filter IDs are mapped (D-029), search falls back to a keyword query built from the original's own values, such as "3.3V LDO voltage regulator SOT23-5". The hard filters do the narrowing. Results are merged across providers, deduplicated by manufacturer and part number, and capped at 25 by default.
+Reason: keyword search is the one search Digi-Key offers today. The query uses only values from the original's provider record, so no part number or value is invented.
+Alternatives considered: waiting for parametric search before building matching (blocks the phase), candidate lists from distributor "similar parts" (not allowed as ground truth and not an Ersatz judgment).
+
+## D-037 Find mode lists ACTIVE candidates only
+
+Date: 2026-10-17
+Decision: in find mode, a candidate that is not ACTIVE is excluded and listed with its lifecycle status. Verify mode keeps decision 9: an NRND suggestion is PARTIAL and an OBSOLETE one is MISMATCH.
+Reason: the phase asks for an active-lifecycle hard filter. A replacement list that offers NRND parts recreates the problem the user came to solve. Verify mode answers a different question about a part the user already named.
+Alternatives considered: NRND kept with a penalty (still offers a part on its way out), lifecycle as a soft rule (lets stock outweigh status).
