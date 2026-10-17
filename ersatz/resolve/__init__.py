@@ -1,4 +1,5 @@
-"""Exact part number resolution across providers.
+"""Resolve a part number as entered to provider records, without guessing."""
 
-Returns FOUND, AMBIGUOUS or NOT_FOUND. A part number is never guessed.
-"""
+from ersatz.resolve.resolve import Resolution, Status, SuffixRule, clean, resolve
+
+__all__ = ["Resolution", "Status", "SuffixRule", "clean", "resolve"]
