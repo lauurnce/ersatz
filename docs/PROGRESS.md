@@ -11,8 +11,8 @@ One prompt is one phase. Each phase ends with a Gate Report and waits for approv
 - [x] E7 (Day 4): ersatz.model and ersatz.normalize: part model, units, packages, categories, lifecycle mapping, lookup --normalize
 - [ ] E8 (Day 5): ersatz.datasheets and ersatz.llm: fetch, page text, LLM extraction, quote verification, validation rules, gold set of 10 datasheets, scripts/eval_extraction.py. Built; label spot-check and first live run pending
 - [x] E9 (Day 6): ersatz.match: rule files, form, fit and lifecycle filters, function scoring, diff, candidate search, ersatz find. Live find pending Digi-Key keys
-- [ ] E10 (Day 7): Mouser adapter, ersatz.resolve, lookup command
-- [ ] E11 (Day 8): free; its planned scope (match) moved into E9
+- [x] E10 (Day 7): ersatz.resolve with suffix rules, ersatz.verify, part numbers from pasted text, CLI: lookup, find, verify, check, extract with rich output, --json and exit codes. Live checks pending Digi-Key keys
+- [ ] E11 (Day 8): Mouser adapter (after its terms are read)
 - [ ] E12 (Day 9): ersatz.candidates and ersatz.verify, full CLI
 - [ ] E13 (Day 10): api: FastAPI, contract tests, deployment
 - [ ] E14 (Day 11): ersatz.bench: dataset v1, harness, first results
