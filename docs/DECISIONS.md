@@ -155,3 +155,10 @@ Date: 2026-11-08
 Decision: Label A in Ersatz-Bench is mapped from the manufacturer's own relationship wording (TI cross-reference types, Renesas and ROHM notice columns) into drop_in, pin_compatible, functional or unspecified. Reactivated parts are removed. Distributor-hosted copies of notices are allowed with the notice number recorded.
 Reason: several manufacturers already grade their replacements, which removes most labeler judgment. Reactivations would otherwise count a valid original as discontinued.
 Alternatives considered: labeling every row by hand from scratch (less reproducible), using distributor substitute types (not manufacturer truth).
+
+## D-023 Added modules: resolve, candidates, budget, rules
+
+Date: 2026-11-08
+Decision: add ersatz.resolve, ersatz.candidates and ersatz.budget to the proposed layout, and keep rule tables as data files in ersatz/rules with IDs that match docs/DOMAIN.md.
+Reason: resolution is shared by verify, candidates and the benchmark; candidate search had no home; budgets are shared by providers, extraction and the benchmark; rules as data keep each rule traceable to its cited row.
+Alternatives considered: resolution inside providers (duplicated per adapter), rules as Python code (harder to audit against the document).
