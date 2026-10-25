@@ -66,3 +66,12 @@ check_untyped_defs = true
 [[tool.mypy.overrides]]
 module = ["ersatz.model.*", "ersatz.normalize.*", "ersatz.match.*", "ersatz.verify.*"]
 strict = true
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]
+addopts = "--disable-socket --allow-unix-socket --strict-markers"
+markers = [
+    "live: calls a real provider with keys from .env, never in CI",
+    "replay: replays local recordings from cache/recordings, never in CI",
+]
