@@ -346,3 +346,22 @@ Follows D-019.
 | bench | scoring on a synthetic run with known answers | pytest | yes |
 
 Coverage target: 90 percent lines for model, normalize, match and verify. No coverage target for adapters beyond the synthetic fixture tests.
+
+## 6. Tooling and CI
+
+Python:
+- uv for environments and locking, Python 3.12 pinned in .python-version.
+- ruff for lint and format.
+- mypy strict on ersatz.model, ersatz.normalize, ersatz.match and ersatz.verify; standard mode elsewhere. verify is added to the strict set because it produces the verdict a user acts on.
+- pytest with pytest-socket, hypothesis, respx and pytest-cov.
+
+Web:
+- pnpm, Next.js App Router with TypeScript and Tailwind, eslint, prettier, vitest, Playwright.
+
+Pre-commit hooks: ruff, ruff format, mypy on the strict modules, gitleaks for secrets, end-of-file and trailing whitespace fixers, a check that no file under cache/ or any local-only file is staged.
+
+GitHub Actions:
+- python.yml on push and pull request: uv sync, ruff, mypy, pytest with coverage.
+- web.yml on changes under web/: pnpm install, lint, vitest, Playwright with a mocked API.
+- secrets.yml on every push: gitleaks over the pushed range.
+- No workflow has access to provider or model keys.
