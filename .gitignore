@@ -32,4 +32,4 @@ pnpm-debug.log*
 !.env.example
 
 # Local caches
-cache/
+/cache/
