@@ -53,3 +53,16 @@ select = ["E", "W", "F", "I", "B", "UP", "SIM", "RUF", "S", "PT"]
 
 [tool.ruff.lint.per-file-ignores]
 "tests/**" = ["S101"]
+
+[tool.mypy]
+python_version = "3.12"
+files = ["ersatz", "api", "tests"]
+plugins = ["pydantic.mypy"]
+warn_unused_configs = true
+warn_redundant_casts = true
+warn_unused_ignores = true
+check_untyped_defs = true
+
+[[tool.mypy.overrides]]
+module = ["ersatz.model.*", "ersatz.normalize.*", "ersatz.match.*", "ersatz.verify.*"]
+strict = true
