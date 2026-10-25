@@ -176,3 +176,10 @@ Date: 2026-11-08
 Decision: Cache is a protocol with SQLite (local) and Postgres (deployed) implementations. Provider data expires after 24 hours; datasheet files and extraction results are keyed by PDF hash and extractor version and do not expire.
 Reason: serverless functions have no persistent disk. A 24 hour limit is the strictest provider term found and keeps the cache from becoming a database of provider data.
 Alternatives considered: SQLite only (does not work deployed), per-provider time-to-live (more configuration for no benefit in v0.1).
+
+## D-026 No LLM call in an API request
+
+Date: 2026-11-08
+Decision: datasheet extraction runs from the CLI or a batch job and stores results. API requests read stored results; when none exist, function rules return UNKNOWN and the response says extraction is pending.
+Reason: extraction can take longer than a function's request limit, costs money per call, and would let anonymous traffic spend the LLM budget.
+Alternatives considered: extraction on demand with a queue (more infrastructure than v0.1 needs).
