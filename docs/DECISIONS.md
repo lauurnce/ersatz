@@ -183,3 +183,10 @@ Date: 2026-11-08
 Decision: datasheet extraction runs from the CLI or a batch job and stores results. API requests read stored results; when none exist, function rules return UNKNOWN and the response says extraction is pending.
 Reason: extraction can take longer than a function's request limit, costs money per call, and would let anonymous traffic spend the LLM budget.
 Alternatives considered: extraction on demand with a queue (more infrastructure than v0.1 needs).
+
+## D-027 Strict typing scope and secret scanning
+
+Date: 2026-11-08
+Decision: mypy strict on ersatz.model, ersatz.normalize, ersatz.match and ersatz.verify. gitleaks runs as a pre-commit hook and in CI. CI tests block network access.
+Reason: verify produces the verdict a user acts on, so it joins the strict set. A secret scanner and a network block back the fixture policy in D-019.
+Alternatives considered: strict everywhere (slows adapter work against loosely typed provider schemas), detect-secrets (gitleaks covers more key formats out of the box).
