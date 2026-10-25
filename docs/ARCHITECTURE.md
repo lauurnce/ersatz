@@ -365,3 +365,24 @@ GitHub Actions:
 - web.yml on changes under web/: pnpm install, lint, vitest, Playwright with a mocked API.
 - secrets.yml on every push: gitleaks over the pushed range.
 - No workflow has access to provider or model keys.
+
+## 7. Deployment
+
+Web: Next.js on Vercel. The browser never sees a key. The web app calls the API from server code only, and no key uses a NEXT_PUBLIC_ variable.
+
+API: two options were compared.
+
+| | Vercel Python functions | AWS Lambda |
+|---|---|---|
+| Setup | same project and platform as the web app (D-004) | separate account, IAM, API Gateway |
+| Secrets | Vercel environment variables, server side | AWS Secrets Manager or environment variables |
+| Cache | Postgres from the Vercel marketplace | RDS or DynamoDB |
+| Long jobs | not suited; request time limits apply | also time-limited; Step Functions for long jobs |
+| Cold starts | present; pdfplumber and pint add import time | present; similar |
+| Cost at demo scale | within the free or hobby tier | within the free tier |
+
+Choice: Vercel Python functions for the API (keeps D-004). The trade-off is that no long-running work happens in a request. Datasheet extraction runs from the CLI or a scheduled batch on a developer machine, and the API serves stored extraction results. A live lookup that needs a datasheet not yet extracted returns provider data with function rules marked UNKNOWN and says extraction is pending.
+
+Keys: Digi-Key, Mouser and the extraction model key are set only as server environment variables in the API project. The web project holds only the API base URL and a shared secret for server-to-server calls.
+
+Rate limiting: per-IP limits on live lookup and verify endpoints. Curated demo examples are served from precomputed results that make no provider call.
