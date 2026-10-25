@@ -401,3 +401,16 @@ LLM calls:
 - Only selected pages are sent (D-021).
 - Bulk extraction and benchmark runs use the Batch API at half price, and the shared schema and instructions are placed first so prompt caching applies.
 - The API never triggers an LLM call.
+
+## 9. Risk register
+
+| # | Risk | Impact | Mitigation |
+|---|---|---|---|
+| 1 | Digi-Key production access is slow or denied, or its terms are read as barring a public tool | no primary provider | apply on Day 2; build against the sandbox and synthetic fixtures; keep Mouser lookup working alone; describe the demo as a reference checker that links to Digi-Key product pages |
+| 2 | Extraction returns a wrong value with a valid-looking quote, such as typ read as max | wrong verdict | quote verification, column-aware schema, gold set with per-field precision and recall published before any score ships |
+| 3 | MPN suffix confusion resolves to the wrong variant | wrong part shown | exact match only, suffix table with sources, AMBIGUOUS status instead of a guess |
+| 4 | Pinout or tab mismatch missed | board damage | tab modeled as a pin, fit FAIL on mismatch, SOT-23-5 never assumed, UNKNOWN never passes |
+| 5 | Daily request quotas exhausted by the public demo | demo stops working | precomputed examples, per-IP limits, request budgets, cache |
+| 6 | LLM spend exceeds the cap | cost | ledger with hard cap enforced before each call, Batch API, extraction keyed by hash |
+| 7 | Benchmark results disputed | credibility | raw responses and hashes published, hand audit of NOT_FOUND, mismatch labeled "per Ersatz scoring", date buckets for training cutoff |
+| 8 | Mouser terms turn out stricter than assumed | secondary provider lost | terms read before the adapter is written; Mouser is optional in every code path |
