@@ -5,7 +5,7 @@ One prompt is one phase. Each phase ends with a Gate Report and waits for approv
 - [x] E1: project brief, hard parts, assumptions, risks, questions
 - [x] E2: repository setup: license, environment template, docs skeleton
 - [x] E3: domain spec: docs/DOMAIN.md, docs/BENCHMARK_DESIGN.md, decision entries
-- [ ] E4: architecture and build plan: docs/ARCHITECTURE.md
+- [x] E4: architecture and build plan: docs/ARCHITECTURE.md
 - [ ] E5 (Day 2): scaffold, tooling, CI, ersatz.model
 - [ ] E6 (Day 3): ersatz.normalize: units, packages, categories, lifecycle mapping
 - [ ] E7 (Day 4): ersatz.providers and ersatz.cache: Digi-Key adapter, synthetic fixtures, budgets
