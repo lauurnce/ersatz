@@ -148,3 +148,10 @@ Date: 2026-11-08
 Decision: extraction uses structured outputs with a schema in which every value carries a page number and a verbatim quote. Ersatz then verifies each quote against that page's pdfplumber text and drops any value whose quote or value string is not found. API citations are not used.
 Reason: the API does not allow citations and structured outputs in one request. Local verification gives the same guarantee, works with any model provider, and is testable without network access.
 Alternatives considered: citations with line-per-field text output parsed by regex (fragile), two requests per datasheet (double cost).
+
+## D-022 Benchmark labels from manufacturer wording
+
+Date: 2026-11-08
+Decision: Label A in Ersatz-Bench is mapped from the manufacturer's own relationship wording (TI cross-reference types, Renesas and ROHM notice columns) into drop_in, pin_compatible, functional or unspecified. Reactivated parts are removed. Distributor-hosted copies of notices are allowed with the notice number recorded.
+Reason: several manufacturers already grade their replacements, which removes most labeler judgment. Reactivations would otherwise count a valid original as discontinued.
+Alternatives considered: labeling every row by hand from scratch (less reproducible), using distributor substitute types (not manufacturer truth).
