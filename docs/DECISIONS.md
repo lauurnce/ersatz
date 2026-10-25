@@ -141,3 +141,10 @@ Date: 2026-11-08
 Decision: pdfplumber (MIT) for page text, coordinates and tables, pypdfium2 (BSD-3-Clause and Apache-2.0) for rendering, Camelot (MIT) as a fallback for hard tables. PyMuPDF and marker are not used. OCR is out of v0.1.
 Reason: PyMuPDF is AGPL-3.0 or commercial, and AGPL obligations reach a hosted API. marker's model weights carry a revenue-limited license. pdfplumber gives character coordinates, which quote verification needs.
 Alternatives considered: PyMuPDF with a commercial license (cost), docling (heavier install, kept as a later option).
+
+## D-021 Extraction with local quote verification
+
+Date: 2026-11-08
+Decision: extraction uses structured outputs with a schema in which every value carries a page number and a verbatim quote. Ersatz then verifies each quote against that page's pdfplumber text and drops any value whose quote or value string is not found. API citations are not used.
+Reason: the API does not allow citations and structured outputs in one request. Local verification gives the same guarantee, works with any model provider, and is testable without network access.
+Alternatives considered: citations with line-per-field text output parsed by regex (fragile), two requests per datasheet (double cost).
