@@ -386,3 +386,18 @@ Choice: Vercel Python functions for the API (keeps D-004). The trade-off is that
 Keys: Digi-Key, Mouser and the extraction model key are set only as server environment variables in the API project. The web project holds only the API base URL and a shared secret for server-to-server calls.
 
 Rate limiting: per-IP limits on live lookup and verify endpoints. Curated demo examples are served from precomputed results that make no provider call.
+
+## 8. Cost control
+
+Provider calls:
+- Cache first, with the 24 hour time-to-live from section 2.
+- A daily request budget per provider, stored in the cache and checked before every call: 900 of Digi-Key's 1,000 daily calls, leaving headroom; Mouser set once its limit is confirmed. When the budget is spent, lookups return cached data or a clear "budget exhausted" error.
+- The rate limiter stays under each provider's per-minute limit (Digi-Key 120 per minute).
+
+LLM calls:
+- A spend ledger records the token usage and cost of every call.
+- A hard cap of 150 USD total for v0.1 and a per-run cap set on the command line. The ledger estimates the cost of a call from a token count before sending it and refuses the call if it would cross either cap. The cap is enforced in code, not by convention.
+- Extraction results are keyed by PDF SHA-256 and extractor version, so a datasheet is never extracted twice.
+- Only selected pages are sent (D-021).
+- Bulk extraction and benchmark runs use the Batch API at half price, and the shared schema and instructions are placed first so prompt caching applies.
+- The API never triggers an LLM call.
