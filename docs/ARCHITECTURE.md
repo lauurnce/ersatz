@@ -328,3 +328,21 @@ Follows D-019.
 - Datasheet tests use small PDFs generated in the test suite with known text on known pages. Real datasheets are referenced by URL and hash in the extraction gold set and downloaded locally on demand.
 - CI never needs keys. If a test tries to open a network connection in CI, it fails (pytest-socket).
 - The secret scanner runs on every commit and in CI, so a key pasted into a fixture is caught before it is pushed.
+
+## 5. Testing strategy
+
+| Layer | Kind | Tools | Runs in CI |
+|---|---|---|---|
+| model, normalize, match, verify | unit tests | pytest | yes |
+| normalize.parse_value | property-based: round trip of generated values and units, ranges, micro sign variants, rejection of wrong dimensions | hypothesis | yes |
+| providers | synthetic fixture tests: auth flow, pagination, 429 retry, budget exhaustion, NotSupported | pytest, respx | yes |
+| providers | replay of local recordings | pytest -m replay | no, local only |
+| match and verify | golden tests: about 40 hand-written original and candidate pairs per category in tests/golden/*.yaml with the expected verdict and rule results | pytest | yes |
+| datasheets | quote verification and page selection on generated PDFs | pytest | yes |
+| datasheets | extraction evaluation: gold set of 15 datasheets per category, about 10 fields each, precision and recall per field | ersatz eval extract | no, costs money, run per extractor change |
+| api | contract tests: OpenAPI schema snapshot, every response has sources and the notice, error shapes | pytest with FastAPI TestClient, schemathesis | yes |
+| web | unit tests | vitest | yes |
+| web | end to end against a mocked API: verify flow, source tooltips, notice visible, NOT FOUND shown as entered | Playwright | yes |
+| bench | scoring on a synthetic run with known answers | pytest | yes |
+
+Coverage target: 90 percent lines for model, normalize, match and verify. No coverage target for adapters beyond the synthetic fixture tests.
