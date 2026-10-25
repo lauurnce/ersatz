@@ -414,3 +414,23 @@ LLM calls:
 | 6 | LLM spend exceeds the cap | cost | ledger with hard cap enforced before each call, Batch API, extraction keyed by hash |
 | 7 | Benchmark results disputed | credibility | raw responses and hashes published, hand audit of NOT_FOUND, mismatch labeled "per Ersatz scoring", date buckets for training cutoff |
 | 8 | Mouser terms turn out stricter than assumed | secondary provider lost | terms read before the adapter is written; Mouser is optional in every code path |
+
+## 10. Build plan
+
+One prompt per day. Commit ranges stay inside 50 to 90 and never exceed 100. A day that lands below its range is fine; no commit is added to reach it.
+
+| Prompt | Day | Deliverables | Tests that prove it | Commits |
+|---|---|---|---|---|
+| E5 | 2 | uv project, ruff, mypy, pytest, pre-commit with gitleaks, GitHub Actions, ersatz.model with Source, Sourced, Part, Parameter, Package, Pinout, Lifecycle | model unit tests; invariant test that Part requires a provider Source; CI green | 55 to 70 |
+| E6 | 3 | ersatz.normalize: parse_value with pint, package groups from rules/packages.yaml, category and lifecycle mapping | property tests for units; table-driven tests for every alias and lifecycle row in DOMAIN.md | 60 to 80 |
+| E7 | 4 | ersatz.cache (SQLite), ersatz.budget, HTTP client with retries and rate limiter, Provider protocol, Digi-Key adapter, synthetic fixtures | fixture tests for auth, 429 retry, budget exhaustion; cache expiry tests; no-network test in CI | 60 to 80 |
+| E8 | 5 | Mouser adapter (after its terms are read), ersatz.resolve, `ersatz lookup` | resolve tests for FOUND, AMBIGUOUS, NOT_FOUND and suffixes; CLI snapshot tests; one manual live check | 55 to 75 |
+| E9 | 6 | ersatz.datasheets: fetch, page text, page selection, LLM client, extraction schema, quote verification | generated-PDF tests for page text and quote checks; schema tests; extraction mocked in CI | 60 to 80 |
+| E10 | 7 | validation rules, extraction gold set (15 per category), `ersatz eval extract`, first precision and recall table | validation unit tests; gold set loader tests; evaluation report checked in | 50 to 70 |
+| E11 | 8 | ersatz.match: rules/ldo.yaml, rules/opamp.yaml, form, fit, function, diff | golden tests, about 40 pairs per category; one test per rule ID | 65 to 85 |
+| E12 | 9 | ersatz.candidates, ersatz.verify, `ersatz candidates` and `ersatz verify` | verdict tests for all four verdicts; NOT_FOUND shown as entered; notice always present | 55 to 75 |
+| E13 | 10 | FastAPI app, Postgres cache, rate limiting, deployment to Vercel | contract tests, schemathesis, deployed health check | 55 to 75 |
+| E14 | 11 | ersatz.bench: dataset v1 (50 rows), runners, token extraction, resolution, audit tool, first results | scoring tests on a synthetic run; manifest hash check; results.md generated | 60 to 85 |
+| E15 | 12 | web demo and landing page, README with benchmark table, docs pass, v0.1 tag | vitest, Playwright end to end, link check on docs | 60 to 85 |
+
+The MCP server follows v0.1 if time remains.
