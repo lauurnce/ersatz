@@ -317,3 +317,14 @@ Every value shown anywhere carries a Source (section 2). The chain is:
 7. Web: each value renders with a source marker. Hover or tap shows provider and retrieval time, or datasheet page and quote, with a link that opens the datasheet at that page.
 
 Two invariants are enforced by tests: a Part cannot be built without a provider Source on its MPN, and the API serializer rejects any value whose Source is missing.
+
+## 4. Fixture policy
+
+Follows D-019.
+
+- Committed fixtures are synthetic. They are built from each provider's published OpenAPI or Swagger schema, use invented values, and every part number starts with TEST-. Each fixture file has a header line saying it is synthetic and naming the schema version it follows.
+- Real responses are recorded only to cache/recordings/, which is git-ignored. An opt-in local run, `pytest -m replay`, replays them to catch schema drift. It never runs in CI.
+- A small live check, `pytest -m live`, calls each provider once with real keys from .env. It runs only on a developer machine, never in CI, and is limited by the same request budgets.
+- Datasheet tests use small PDFs generated in the test suite with known text on known pages. Real datasheets are referenced by URL and hash in the extraction gold set and downloaded locally on demand.
+- CI never needs keys. If a test tries to open a network connection in CI, it fails (pytest-socket).
+- The secret scanner runs on every commit and in CI, so a key pasted into a fixture is caught before it is pushed.
