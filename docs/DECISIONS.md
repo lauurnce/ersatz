@@ -169,3 +169,10 @@ Date: 2026-11-08
 Decision: Source is a model of its own and Sourced[T] wraps MPN, manufacturer, lifecycle, stock and datasheet URL; Parameter carries a Source directly. A Part cannot be built without a provider Source on its MPN, and the API serializer rejects any value without a Source.
 Reason: the hard rule that every shown value traces to a source has to hold for all fields, not only parameters. Enforcing it in types and the serializer makes it testable.
 Alternatives considered: a source field on Parameter only (lifecycle and MPN untraced), a separate provenance log (can drift from the data).
+
+## D-025 Cache protocol with two backends
+
+Date: 2026-11-08
+Decision: Cache is a protocol with SQLite (local) and Postgres (deployed) implementations. Provider data expires after 24 hours; datasheet files and extraction results are keyed by PDF hash and extractor version and do not expire.
+Reason: serverless functions have no persistent disk. A 24 hour limit is the strictest provider term found and keeps the cache from becoming a database of provider data.
+Alternatives considered: SQLite only (does not work deployed), per-provider time-to-live (more configuration for no benefit in v0.1).
