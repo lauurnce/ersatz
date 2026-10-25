@@ -134,3 +134,10 @@ Date: 2026-11-04
 Decision: supersedes D-003. No recorded provider response is committed. Test fixtures are synthetic: they follow each provider's published schema, use invented values and part numbers that start with TEST-, and are marked as synthetic. Real recordings live only in the local, git-ignored cache and are used by an opt-in local test run.
 Reason: Digi-Key §3.2(iv) bars disclosing DigiKey Data to third parties and §5.1(e) bars building a database from it; Nexar §1.2(vi) bars storing data beyond 24 hours; Mouser's terms are unread. A public repository is a disclosure under each.
 Alternatives considered: small trimmed recordings (still a disclosure), no fixtures (tests would need the network and keys).
+
+## D-020 PDF library
+
+Date: 2026-11-08
+Decision: pdfplumber (MIT) for page text, coordinates and tables, pypdfium2 (BSD-3-Clause and Apache-2.0) for rendering, Camelot (MIT) as a fallback for hard tables. PyMuPDF and marker are not used. OCR is out of v0.1.
+Reason: PyMuPDF is AGPL-3.0 or commercial, and AGPL obligations reach a hosted API. marker's model weights carry a revenue-limited license. pdfplumber gives character coordinates, which quote verification needs.
+Alternatives considered: PyMuPDF with a commercial license (cost), docling (heavier install, kept as a later option).
