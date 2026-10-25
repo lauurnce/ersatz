@@ -162,3 +162,10 @@ Date: 2026-11-08
 Decision: add ersatz.resolve, ersatz.candidates and ersatz.budget to the proposed layout, and keep rule tables as data files in ersatz/rules with IDs that match docs/DOMAIN.md.
 Reason: resolution is shared by verify, candidates and the benchmark; candidate search had no home; budgets are shared by providers, extraction and the benchmark; rules as data keep each rule traceable to its cited row.
 Alternatives considered: resolution inside providers (duplicated per adapter), rules as Python code (harder to audit against the document).
+
+## D-024 Source on every value
+
+Date: 2026-11-08
+Decision: Source is a model of its own and Sourced[T] wraps MPN, manufacturer, lifecycle, stock and datasheet URL; Parameter carries a Source directly. A Part cannot be built without a provider Source on its MPN, and the API serializer rejects any value without a Source.
+Reason: the hard rule that every shown value traces to a source has to hold for all fields, not only parameters. Enforcing it in types and the serializer makes it testable.
+Alternatives considered: a source field on Parameter only (lifecycle and MPN untraced), a separate provenance log (can drift from the data).
