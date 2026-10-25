@@ -286,3 +286,34 @@ def report(score: RunScore) -> str      # results.md
 6. Provider protocol gained capabilities and get_part takes an optional manufacturer: Mouser cannot do parametric search, and the same MPN can exist at two manufacturers.
 7. Source is a first-class type with Sourced[T], not a field on Parameter only: lifecycle, MPN, manufacturer and stock need sources too.
 8. Extraction verifies quotes locally instead of using API citations (D-021).
+
+## 3. Source tracing
+
+Every value shown anywhere carries a Source (section 2). The chain is:
+
+1. Provider adapter: the raw response body is hashed (SHA-256) and the hash becomes response_id. The raw body is kept only in the cache, under its time-to-live. Each ProviderRecord gets a Source with provider, response_id, retrieved_at and the product page URL.
+2. Normalization: every field of Part copies the Source of the record it came from. Normalization never invents a value; a field it cannot map stays None or UNKNOWN.
+3. Datasheet extraction: each Parameter gets a Source with the datasheet URL, file SHA-256, literature revision, 1-indexed page and the verified quote.
+4. Merging: when a provider and a datasheet both give a value, both are kept. Rules use the datasheet value; the diff shows both.
+5. Matching and verify: each RuleResult holds the two Parameters it compared, so each reason points to two sources and to a DOMAIN.md rule ID.
+6. API: JSON carries the same structure. Example of one parameter:
+
+```json
+{
+  "name": "dropout_voltage",
+  "max": 0.35, "unit": "V",
+  "conditions": {"I_OUT": "0.5 A", "T_J": "25 degC"},
+  "source": {
+    "kind": "datasheet",
+    "url": "https://example.invalid/datasheet.pdf",
+    "sha256": "9f2c...",
+    "revision": "SLVSxxxB",
+    "page": 6,
+    "quote": "Dropout voltage ... 350 mV"
+  }
+}
+```
+
+7. Web: each value renders with a source marker. Hover or tap shows provider and retrieval time, or datasheet page and quote, with a link that opens the datasheet at that page.
+
+Two invariants are enforced by tests: a Part cannot be built without a provider Source on its MPN, and the API serializer rejects any value whose Source is missing.
