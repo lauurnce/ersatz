@@ -120,3 +120,45 @@ Audit time. About five minutes per NOT_FOUND token by hand.
 5. Prompt sensitivity: one prompt is tested. A second phrasing is an extension, not part of v0.1.
 6. Token extraction: the regex can miss or over-capture. Extraction errors found during audit are logged, and the regex version is recorded.
 7. Single labeler: consistency is measured by the relabeling pass, not by inter-rater agreement.
+
+## Ground truth sources
+
+Ground truth comes only from manufacturer publications that name a replacement. Distributor substitute lists are never ground truth.
+
+| Manufacturer | Where replacements appear | Native relationship wording | Dates in notice |
+|---|---|---|---|
+| Texas Instruments | product page "Compare alternates" section [G1] | "Drop-in replacement with upgraded functionality", "Pin-for-pin with same functionality" | in per-notice PDFs; policy gives 12 months to order and six more to deliver [G2] |
+| onsemi | discontinuance notice table "Device to be Discontinued, Replacement part, Supplier" [G3] | none | Last Time Buy Date, Last Ship Date |
+| Renesas | end of life notice column "Replacement / Similar / Re-Design Part Number" [G4] | Replacement, Similar, Re-Design | LTB and LTS per part |
+| ROHM | notice columns "Package Compatible Replacement" and "Electrical Compatible Replacement" [G5] | package and electrical compatibility separately | LTB and LTS per part |
+| STMicroelectronics | termination notice table "Suggested Replacement Parts (if applicable)" [G6] | suggested | Last Order Entry Date, Last Order Delivery Date |
+| Nexperia | discontinuation notice [G7] | "reference only information", not a form, fit or function claim | last order and delivery dates |
+| Diodes Incorporated | notice tables split by replacement and lifetime buy [G8] | none | last order date, last ship date |
+| Microchip | notice attachment listing replacement parts [G9] | none | LTB and LTS |
+
+Label A mapping from native wording (extends the labeling protocol with pin_compatible):
+
+| Native wording | Label A |
+|---|---|
+| TI "Drop-in replacement"; ROHM listed in both package and electrical columns | drop_in |
+| TI "Pin-for-pin"; ROHM package column only | pin_compatible |
+| TI "Same functionality" or "Similar functionality"; Renesas Similar or Re-Design; ROHM electrical column only | functional |
+| Renesas Replacement; onsemi, ST, Diodes, Microchip replacement columns; Nexperia reference replacements | unspecified |
+
+Rules:
+- A manufacturer can reverse a discontinuance; onsemi publishes reactivation notices [G10]. Rows whose original part is reactivated before the snapshot date are removed.
+- Notices cover only part of all discontinuances: 52 percent of parts that went obsolete in 2025 had no change notice [L11]. The dataset is therefore a sample of announced discontinuances, which is stated next to every result.
+- Distributor-hosted copies of manufacturer notices are acceptable sources when the manufacturer site blocks retrieval. The row records both the copy URL and the manufacturer's notice number.
+
+Sources:
+- [G1] Texas Instruments product page example: https://www.ti.com/product/OPA2107
+- [G2] Texas Instruments product change notification policy: https://www.ti.com/support-quality/quality-policies-procedures/product-change-notification.html
+- [G3] onsemi notice PD24446X3: https://www.onsemi.com/pcn/public/final-document/h9R-2M6KBXfyYbXss5nFZA
+- [G4] Renesas PCN 075 end of life notice: https://www.renesas.com/en/document/eln/pcn-075-end-life-notice
+- [G5] ROHM notice 3024001 (distributor-hosted copy): https://mm.digikey.com/Volume0/opasdata/d220001/medias/docus/6400/PCN_3024001.pdf
+- [G6] ST termination notice AMS/25/15342 (distributor-hosted copy): https://mm.digikey.com/Volume0/opasdata/d220001/medias/docus/6778/AMS-25-15342.pdf
+- [G7] Nexperia notice CN-202405011DNU01 (distributor-hosted copy): https://mm.digikey.com/Volume0/opasdata/d220001/medias/docus/6506/CN-202405011DNU01.pdf
+- [G8] Diodes Incorporated PCN 2464: https://www.diodes.com/assets/PCN-Files/Diodes_PCN_2464_Rev1_EOL.pdf?v=2
+- [G9] Microchip notice ASER-28YARD384 (distributor-hosted copy): https://media.digikey.com/pdf/PCNs/Microchip/ASER-28YARD384.pdf
+- [G10] onsemi reactivation notice PD24134X5: https://www.onsemi.com/pcn/public/final-document/w6bbDWommFBrX3mviOXnNw
+- [L11] see docs/DOMAIN.md section 1
