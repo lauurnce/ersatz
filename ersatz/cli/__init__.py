@@ -3,6 +3,7 @@
 import typer
 
 from ersatz import __version__
+from ersatz.cli.lookup import lookup as lookup_command
 
 app = typer.Typer(
     name="ersatz",
@@ -20,3 +21,6 @@ def main() -> None:
 def version() -> None:
     """Print the installed version."""
     typer.echo(f"ersatz {__version__}")
+
+
+app.command(name="lookup")(lookup_command)
