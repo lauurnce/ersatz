@@ -8,7 +8,7 @@ One prompt is one phase. Each phase ends with a Gate Report and waits for approv
 - [x] E4: architecture and build plan: docs/ARCHITECTURE.md
 - [x] E5 (Day 2): scaffold, tooling, CI
 - [ ] E6 (Day 3): ersatz.model (moved from E5, which had no feature code) and ersatz.normalize: units, packages, categories, lifecycle mapping
-- [ ] E7 (Day 4): ersatz.providers and ersatz.cache: Digi-Key adapter, synthetic fixtures, budgets
+- [x] E7 (Day 4): ersatz.providers and ersatz.cache: Digi-Key adapter, synthetic fixtures, budgets, lookup command, make smoke. Parametric search waits for filter IDs (D-029)
 - [ ] E8 (Day 5): Mouser adapter, ersatz.resolve, lookup command
 - [ ] E9 (Day 6): ersatz.datasheets: fetch, page text, LLM extraction, quote verification
 - [ ] E10 (Day 7): extraction gold set and evaluation, validation rules
