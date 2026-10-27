@@ -190,3 +190,10 @@ Date: 2026-11-08
 Decision: mypy strict on ersatz.model, ersatz.normalize, ersatz.match and ersatz.verify. gitleaks runs as a pre-commit hook and in CI. CI tests block network access.
 Reason: verify produces the verdict a user acts on, so it joins the strict set. A secret scanner and a network block back the fixture policy in D-019.
 Alternatives considered: strict everywhere (slows adapter work against loosely typed provider schemas), detect-secrets (gitleaks covers more key formats out of the box).
+
+## D-028 One CI workflow for the scaffold
+
+Date: 2026-11-08
+Decision: a single .github/workflows/ci.yml with four jobs (python, web, hooks, secrets) replaces the three workflow files planned in ARCHITECTURE.md section 6. Every action is pinned to a commit SHA with the version in a comment. The web job runs on every push for now.
+Reason: one file is easier to read while the project is small, and the scaffold prompt asked for ci.yml. Path filters for the web job can be added when web build time matters.
+Alternatives considered: python.yml, web.yml and secrets.yml as planned (more files for the same checks), tags instead of SHAs (a moved tag would change what runs).
