@@ -1,4 +1,4 @@
-.PHONY: setup lint typecheck test api-dev web-dev web-test all
+.PHONY: setup lint typecheck test smoke api-dev web-dev web-test all
 
 setup: ## Install Python and web dependencies and the git hooks
 	uv sync --locked
@@ -17,6 +17,10 @@ typecheck: ## Type check Python with mypy and web with tsc
 
 test: ## Run the Python tests
 	uv run pytest
+
+smoke: ## Live Digi-Key check with keys from .env, e.g. make smoke PARTS="A B C"
+	ERSATZ_SMOKE_PARTS="$(PARTS)" uv run pytest -m live -v -rs
+	$(if $(PARTS),uv run ersatz lookup --record $(PARTS))
 
 api-dev: ## Run the API locally on port 8000
 	uv run uvicorn api.main:app --reload --port 8000
