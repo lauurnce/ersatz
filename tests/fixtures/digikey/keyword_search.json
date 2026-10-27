@@ -1,0 +1,21 @@
+{
+  "_fixture": "synthetic, Digi-Key Product Information v4 KeywordResponse shape",
+  "ProductsCount": 2,
+  "Products": [
+    {
+      "Manufacturer": {"Id": 9001, "Name": "Test Semiconductor"},
+      "ManufacturerProductNumber": "TEST-LDO33",
+      "ProductStatus": {"Id": 0, "Status": "Active"},
+      "QuantityAvailable": 1520,
+      "Parameters": [{"ParameterId": 1291, "ParameterText": "Supplier Device Package", "ValueId": "7", "ValueText": "SOT-223-3"}]
+    },
+    {
+      "Manufacturer": {"Id": 9003, "Name": "Sample Devices"},
+      "ManufacturerProductNumber": "TEST-LDO33-B",
+      "ProductStatus": {"Id": 1, "Status": "Not For New Designs"},
+      "QuantityAvailable": 40,
+      "Parameters": []
+    }
+  ],
+  "ExactMatches": []
+}

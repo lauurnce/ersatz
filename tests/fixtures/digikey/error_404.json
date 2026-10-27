@@ -1,0 +1,1 @@
+{"_fixture": "synthetic, Digi-Key error response shape", "ErrorResponseVersion": "3.0.0", "StatusCode": 404, "ErrorMessage": "Product not found", "ErrorDetails": "", "RequestId": "test-request"}

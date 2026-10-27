@@ -1,0 +1,41 @@
+{
+  "_fixture": "synthetic, Digi-Key Product Information v4 ProductDetails shape",
+  "Product": {
+    "Description": {
+      "ProductDescription": "IC REG LINEAR 3.3V 500MA SOT223",
+      "DetailedDescription": "Linear Voltage Regulator IC Positive Fixed 1 Output 500mA SOT-223-3"
+    },
+    "Manufacturer": {"Id": 9001, "Name": "Test Semiconductor"},
+    "ManufacturerProductNumber": "TEST-LDO33",
+    "ProductUrl": "https://www.digikey.com/en/products/detail/test/TEST-LDO33/1",
+    "DatasheetUrl": "//example.com/datasheets/test-ldo33.pdf",
+    "QuantityAvailable": 1520,
+    "ProductStatus": {"Id": 0, "Status": "Active"},
+    "DateLastBuyChance": null,
+    "Discontinued": false,
+    "EndOfLife": false,
+    "Category": {
+      "CategoryId": 32,
+      "Name": "Integrated Circuits (ICs)",
+      "ChildCategories": [
+        {
+          "CategoryId": 2000,
+          "Name": "Power Management (PMIC)",
+          "ChildCategories": [
+            {"CategoryId": 699, "Name": "Voltage Regulators - Linear, Low Drop Out (LDO) Regulators", "ChildCategories": []}
+          ]
+        }
+      ]
+    },
+    "Parameters": [
+      {"ParameterId": 1989, "ParameterText": "Output Configuration", "ValueId": "1", "ValueText": "Positive"},
+      {"ParameterId": 2003, "ParameterText": "Voltage - Input (Max)", "ValueId": "2", "ValueText": "15V"},
+      {"ParameterId": 2004, "ParameterText": "Voltage - Output (Min/Fixed)", "ValueId": "3", "ValueText": "3.3V"},
+      {"ParameterId": 2006, "ParameterText": "Current - Output", "ValueId": "4", "ValueText": "500mA"},
+      {"ParameterId": 2007, "ParameterText": "Voltage Dropout (Max)", "ValueId": "5", "ValueText": "1.2V @ 500mA"},
+      {"ParameterId": 16, "ParameterText": "Package / Case", "ValueId": "6", "ValueText": "TO-261-4, TO-261AA"},
+      {"ParameterId": 1291, "ParameterText": "Supplier Device Package", "ValueId": "7", "ValueText": "SOT-223-3"}
+    ]
+  },
+  "SearchLocaleUsed": {"Site": "US", "Language": "en", "Currency": "USD"}
+}

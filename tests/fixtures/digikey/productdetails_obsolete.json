@@ -1,0 +1,19 @@
+{
+  "_fixture": "synthetic, Digi-Key Product Information v4 ProductDetails shape",
+  "Product": {
+    "Description": {"ProductDescription": "IC OPAMP GP 2 CIRCUIT 8SOIC"},
+    "Manufacturer": {"Id": 9002, "Name": "Example Analog Co"},
+    "ManufacturerProductNumber": "TEST-OPA2",
+    "ProductUrl": "https://www.digikey.com/en/products/detail/example/TEST-OPA2/2",
+    "DatasheetUrl": "https://example.com/datasheets/test-opa2.pdf",
+    "QuantityAvailable": 0,
+    "ProductStatus": {"Id": 4, "Status": "Obsolete"},
+    "DateLastBuyChance": "2025-06-30T00:00:00Z",
+    "Category": {"CategoryId": 687, "Name": "Instrumentation, Op Amps, Buffer Amps", "ChildCategories": []},
+    "Parameters": [
+      {"ParameterId": 2094, "ParameterText": "Number of Circuits", "ValueId": "2", "ValueText": "2"},
+      {"ParameterId": 2097, "ParameterText": "Gain Bandwidth Product", "ValueId": "3", "ValueText": "1 MHz"},
+      {"ParameterId": 16, "ParameterText": "Package / Case", "ValueId": "6", "ValueText": "8-SOIC (0.154\", 3.90mm Width)"}
+    ]
+  }
+}
