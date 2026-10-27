@@ -1,23 +1,29 @@
 """ersatz lookup output, with the provider replaced by a fixture-backed fake."""
 
 import json
+from collections.abc import Iterator
+from pathlib import Path
 
 import pytest
 from typer.testing import CliRunner
 
 from ersatz.cli import app
 from ersatz.notice import NOTICE
+from ersatz.settings import get_settings
 from tests.providers.fakes import Router, json_response, make_digikey
 
 
 @pytest.fixture(autouse=True)
-def fake_provider(monkeypatch: pytest.MonkeyPatch) -> None:
+def fake_provider(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> Iterator[None]:
     router = Router(
         json_response(200, "productdetails_ldo.json"), json_response(404, "error_404.json")
     )
     provider, _, _ = make_digikey(router)
     monkeypatch.setattr("ersatz.cli.lookup.build_digikey", lambda *a, **k: provider)
-    monkeypatch.setenv("ERSATZ_CACHE_DIR", ":memory:")
+    monkeypatch.setenv("ERSATZ_CACHE_DIR", str(tmp_path))
+    get_settings.cache_clear()
+    yield
+    get_settings.cache_clear()
 
 
 def test_text_output_shows_source_and_notice() -> None:
