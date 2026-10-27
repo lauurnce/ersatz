@@ -197,3 +197,10 @@ Date: 2026-11-08
 Decision: a single .github/workflows/ci.yml with four jobs (python, web, hooks, secrets) replaces the three workflow files planned in ARCHITECTURE.md section 6. Every action is pinned to a commit SHA with the version in a comment. The web job runs on every push for now.
 Reason: one file is easier to read while the project is small, and the scaffold prompt asked for ci.yml. Path filters for the web job can be added when web build time matters.
 Alternatives considered: python.yml, web.yml and secrets.yml as planned (more files for the same checks), tags instead of SHAs (a moved tag would change what runs).
+
+## D-029 Digi-Key adapter first, parametric search later
+
+Date: 2026-11-08
+Decision: the provider phase ships the Digi-Key adapter with product details and keyword search. Mouser waits until its terms are read. Parametric search raises NotSupported until Digi-Key filter IDs are mapped from local recordings. Committed fixtures stay synthetic, and recordings are scrubbed and kept local.
+Reason: D-018 makes Mouser conditional on its terms. Filter IDs appear only in live responses, so guessing them would make untested code. D-019 bars committing recorded responses.
+Alternatives considered: a Mouser adapter from its public docs (risks building against terms not yet read), hard-coded filter IDs (unverified), committed recordings with values replaced (still derived from provider data).
