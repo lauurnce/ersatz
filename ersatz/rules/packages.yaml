@@ -1,0 +1,98 @@
+# Package equivalence groups. Mirrors docs/DOMAIN.md section 2.
+# A group holds names that share one land pattern: same lead count, pitch and
+# lead span. Height is kept per group because a thinner part fits where a
+# taller one fits, but not the reverse. Source IDs are listed in DOMAIN.md.
+# Names with a trailing lead count (SOT-223-3) or a JEDEC variant letter (TO-261AA)
+# are the DOMAIN.md names in the forms distributors print.
+version: 1
+groups:
+  SOT23-3:
+    status: CITED
+    sources: [F5, F6]
+    pin_counts: [3]
+    height_max_mm: 1.45
+    aliases: [SOT-23, SOT23, SOT-23-3, TO-236AB, TO-236-3]
+  SOT23-5:
+    status: CITED
+    sources: [F7, F8]
+    pin_counts: [5]
+    height_max_mm: 1.45
+    aliases: [SOT-23-5, SOT-25, SC-74A, TSOP-5, SOT753]
+  SOT23-6:
+    status: CITED
+    sources: [F9, F10]
+    pin_counts: [6]
+    height_max_mm: 1.45
+    aliases: [SOT-23-6, SOT-26, SC-74, TSOP-6, SOT457]
+  TSOT23-5:
+    status: CITED
+    sources: [F11]
+    pin_counts: [5]
+    height_max_mm: 1.00
+    land_pattern: SOT23-5
+    aliases: [TSOT-23-5, TSOT-25, SOT-23-5 THIN]
+  SOT223:
+    status: CITED
+    sources: [F12]
+    pin_counts: [3, 4]  # three leads plus the tab; vendors count it either way
+    height_max_mm: 1.8
+    aliases: [SOT-223, SC-73, TO-261, SOT-223-3, SOT-223-4, TO-261-4, TO-261AA]
+  SOT89:
+    status: CITED
+    sources: [F13]
+    pin_counts: [3, 4]
+    height_max_mm: 1.6
+    aliases: [SOT-89, SC-62, TO-243, SOT-89-3, TO-243AA]
+  SOIC8N:
+    status: CITED
+    sources: [F14, F15]
+    pin_counts: [8]
+    body_width_mm: 3.9
+    height_max_mm: 1.75
+    aliases: [SOIC-8, SO-8]
+  MSOP8:
+    status: CITED, height UNVERIFIED
+    sources: [F16]
+    pin_counts: [8]
+    body_width_mm: 3.0
+    height_max_mm: 1.1
+    aliases: [MSOP-8, VSSOP-8]
+  TSSOP8W:
+    status: MO-153 reference UNVERIFIED
+    sources: [F17]
+    pin_counts: [8]
+    body_width_mm: 4.4
+    height_max_mm: 1.2
+    aliases: []
+  DPAK:
+    status: CITED
+    sources: [F18]
+    pin_counts: [2, 3]
+    height_max_mm: 2.38
+    aliases: [DPAK, TO-252, SC-63, TO-252-3, TO-252AA]
+  D2PAK3:
+    status: CITED
+    sources: [F19]
+    pin_counts: [2, 3]
+    aliases: [D2PAK, TO-263, TO-263-3, TO-263AB]
+  TO220:
+    status: CITED
+    sources: [F20]
+    pin_counts: [3]
+    aliases: [TO-220, TO-220AB, SC-46, TO-220-3]
+  TO92:
+    status: CITED
+    sources: [F21]
+    pin_counts: [3]
+    aliases: [TO-92, SC-43A, TO-92-3]
+
+# Names that need a body width. Without one the group is UNKNOWN (F17).
+ambiguous:
+  SOP-8: {3.9: SOIC8N}
+  TSSOP-8: {3.0: MSOP8, 4.4: TSSOP8W}
+
+# No-lead packages never form a group: pad geometry differs per drawing (F22).
+no_lead: [DFN, QFN, SON, LGA, BGA, CSP]
+
+# Body widths within this many millimetres count as equal.
+width_tolerance_mm: 0.1
