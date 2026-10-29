@@ -1,0 +1,28 @@
+# Provider lifecycle strings to the Ersatz enum. Mirrors docs/DOMAIN.md
+# section 1, "Ersatz lifecycle enum and mapping". Matching ignores case.
+# Any string not listed maps to UNKNOWN.
+version: 1
+providers:
+  digikey:
+    status: "values from the Digi-Key forum [L12], [L13]; exact API strings UNVERIFIED"
+    map:
+      "Active": ACTIVE
+      "Not Recommended for New Design": NRND
+      "Not Recommended for New Designs": NRND
+      "Not For New Designs": NRND
+      "Last Time Buy": LAST_TIME_BUY
+      "Obsolete": OBSOLETE
+      # The distributor stopped stocking the part; the maker may still make it [L13].
+      "Discontinued at Digi-Key": UNKNOWN
+  nexar:
+    status: "CITED [L15]"
+    map:
+      "Production": ACTIVE
+      "New": ACTIVE
+      "NRND": NRND
+      "Obsolete": OBSOLETE
+    # EOL is LAST_TIME_BUY only while the last buy date is in the future.
+    eol_with_future_last_buy: ["EOL"]
+  mouser:
+    status: "no values documented [L14]; every string maps to UNKNOWN"
+    map: {}
