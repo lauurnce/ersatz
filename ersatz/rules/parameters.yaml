@@ -1,0 +1,25 @@
+# Provider parameter names to Ersatz parameters, per category.
+# slot says where a single value goes when the text has no qualifier.
+# The Digi-Key names follow the v4 schema examples and are UNVERIFIED until
+# seen in a local recording. "Voltage - Input (Max)" may be an absolute
+# maximum or a recommended maximum; the datasheet decides (LDO-04, LDO-05).
+version: 1
+providers:
+  digikey:
+    ldo:
+      "Voltage - Input (Min)": {param: vin, slot: min}
+      "Voltage - Input (Max)": {param: vin, slot: max}
+      "Voltage - Output (Min/Fixed)": {param: vout, slot: typ}
+      "Current - Output": {param: iout, slot: max}
+      "Voltage Dropout (Max)": {param: dropout, slot: max}
+      "Current - Quiescent (Iq)": {param: iq, slot: typ}
+      "PSRR": {param: psrr, slot: typ}
+    opamp:
+      "Number of Circuits": {param: channels, slot: typ}
+      "Gain Bandwidth Product": {param: gbw, slot: typ}
+      "Slew Rate": {param: slew_rate, slot: typ}
+      "Current - Input Bias": {param: ibias, slot: typ}
+      "Voltage - Input Offset": {param: vos, slot: typ}
+      "Voltage - Supply Span (Min)": {param: vsupply, slot: min}
+      "Voltage - Supply Span (Max)": {param: vsupply, slot: max}
+      "Current - Supply": {param: iq, slot: typ}
