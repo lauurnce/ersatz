@@ -6,34 +6,12 @@ from typing import Annotated
 import typer
 
 from ersatz.cache import SqliteCache
+from ersatz.cli.show import print_normalized, print_record
+from ersatz.normalize import normalize
 from ersatz.notice import NOTICE
 from ersatz.providers import ProviderError, ProviderRecord
 from ersatz.providers.factory import build_digikey
 from ersatz.settings import get_settings
-
-
-def _print_record(record: ProviderRecord) -> None:
-    s = record.source
-    typer.echo(f"{record.mpn}  ({record.manufacturer})")
-    rows = [
-        ("lifecycle", record.raw_lifecycle),
-        ("last buy", record.raw_last_buy),
-        ("category", record.raw_category),
-        ("package", record.raw_package),
-        ("stock", None if record.stock is None else str(record.stock)),
-        ("datasheet", record.datasheet_url),
-    ]
-    for label, value in rows:
-        if value is not None:
-            typer.echo(f"  {label:<10} {value}")
-    for name, value in record.raw_parameters.items():
-        typer.echo(f"  - {name}: {value}")
-    typer.echo(
-        f"  source     {s.provider} response {(s.response_id or '')[:12]} "
-        f"retrieved {s.retrieved_at:%Y-%m-%d %H:%M} UTC"
-    )
-    if s.url:
-        typer.echo(f"             {s.url}")
 
 
 def lookup(
@@ -42,6 +20,9 @@ def lookup(
     as_json: Annotated[bool, typer.Option("--json", help="Print JSON.")] = False,
     record: Annotated[
         bool, typer.Option(help="Save scrubbed responses under cache/recordings/.")
+    ] = False,
+    normalized: Annotated[
+        bool, typer.Option("--normalize", help="Also show the normalized part.")
     ] = False,
 ) -> None:
     """Look up part numbers at Digi-Key. Values are shown as the provider returned them."""
@@ -58,7 +39,18 @@ def lookup(
     if as_json:
         payload = {
             "results": {
-                q: [r.model_dump(mode="json") for r in recs] for q, recs in results.items()
+                q: [
+                    {
+                        "record": r.model_dump(mode="json"),
+                        **(
+                            {"part": normalize(r).part.model_dump(mode="json")}
+                            if normalized
+                            else {}
+                        ),
+                    }
+                    for r in recs
+                ]
+                for q, recs in results.items()
             },
             "notice": NOTICE,
         }
@@ -68,6 +60,8 @@ def lookup(
         if not records:
             typer.echo(f"{query} (as entered)  NOT FOUND at digikey")
         for r in records:
-            _print_record(r)
+            print_record(r)
+            if normalized:
+                print_normalized(normalize(r))
         typer.echo("")
     typer.echo(NOTICE)

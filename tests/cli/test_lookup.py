@@ -39,4 +39,20 @@ def test_json_output_carries_notice() -> None:
     result = CliRunner().invoke(app, ["lookup", "TEST-LDO33", "--json"])
     data = json.loads(result.output)
     assert data["notice"] == NOTICE
-    assert data["results"]["TEST-LDO33"][0]["source"]["provider"] == "digikey"
+    assert data["results"]["TEST-LDO33"][0]["record"]["source"]["provider"] == "digikey"
+
+
+def test_normalize_shows_before_and_after() -> None:
+    result = CliRunner().invoke(app, ["lookup", "TEST-LDO33", "--normalize"])
+    assert result.exit_code == 0, result.output
+    assert "  - Voltage - Output (Min/Fixed): 3.3V" in result.output
+    assert "    package    SOT223 (matched)" in result.output
+    assert "vout            min        -  typ      3.3  max        -  V" in result.output
+    assert "@ I=0.5 A" in result.output
+
+
+def test_normalize_json_has_part() -> None:
+    result = CliRunner().invoke(app, ["lookup", "TEST-LDO33", "--json", "--normalize"])
+    part = json.loads(result.output)["results"]["TEST-LDO33"][0]["part"]
+    assert part["parameters"]["vout"]["typ"] == 3.3
+    assert part["mpn"]["source"]["provider"] == "digikey"
