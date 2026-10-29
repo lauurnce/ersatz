@@ -20,6 +20,8 @@ class ParamName(StrEnum):
     IQ = "iq"
     ISHDN = "ishdn"
     PSRR = "psrr"
+    COUT_MIN = "cout_min"  # LDO-13: minimum stable output capacitance
+    COUT_ESR = "cout_esr"  # LDO-13: stable output capacitor ESR window
     # Op-amp (DOMAIN.md section 4)
     CHANNELS = "channels"
     VSUPPLY = "vsupply"
@@ -46,6 +48,8 @@ UNITS: dict[ParamName, str] = {
     ParamName.IQ: "A",
     ParamName.ISHDN: "A",
     ParamName.PSRR: "dB",
+    ParamName.COUT_MIN: "F",
+    ParamName.COUT_ESR: "ohm",
     ParamName.CHANNELS: "",
     ParamName.VSUPPLY: "V",
     ParamName.GBW: "Hz",
@@ -71,6 +75,8 @@ CATEGORY_PARAMS: dict[Category, frozenset[ParamName]] = {
             ParamName.IQ,
             ParamName.ISHDN,
             ParamName.PSRR,
+            ParamName.COUT_MIN,
+            ParamName.COUT_ESR,
             ParamName.TJ,
         }
     ),

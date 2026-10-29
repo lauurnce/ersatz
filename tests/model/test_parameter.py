@@ -34,3 +34,9 @@ def test_rejects_empty_value() -> None:
 
 def test_every_parameter_has_a_unit() -> None:
     assert set(UNITS) == set(ParamName)
+
+
+def test_ldo_output_capacitor_window_uses_farad_and_ohm() -> None:
+    esr = Parameter(name=ParamName.COUT_ESR, min=0.3, max=22, unit="ohm", source=DATASHEET)
+    cap = Parameter(name=ParamName.COUT_MIN, min=1e-6, unit="F", source=DATASHEET)
+    assert (esr.unit, cap.unit) == ("ohm", "F")
