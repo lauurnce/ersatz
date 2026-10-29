@@ -9,6 +9,7 @@ import hashlib
 from collections.abc import Callable
 from datetime import UTC, datetime
 from pathlib import Path
+from urllib.parse import urlsplit
 
 import httpx
 from pydantic import BaseModel
@@ -50,6 +51,33 @@ def store(content: bytes, url: str, cache_dir: Path, fetched_at: datetime) -> Da
     )
 
 
+def _download(url: str, transport: httpx.BaseTransport | None) -> bytes:
+    """Stream the body and stop as soon as it passes MAX_BYTES."""
+    chunks: list[bytes] = []
+    total = 0
+    with httpx.Client(
+        transport=transport,
+        timeout=60.0,
+        follow_redirects=True,
+        headers={"User-Agent": USER_AGENT},
+    ) as client:
+        try:
+            with client.stream("GET", url) as response:
+                if response.status_code != 200:
+                    raise DatasheetFetchError(f"{url}: HTTP {response.status_code}")
+                declared = response.headers.get("Content-Length")
+                if declared and declared.isdigit() and int(declared) > MAX_BYTES:
+                    raise DatasheetFetchError(f"{url}: file is larger than {MAX_BYTES} bytes")
+                for chunk in response.iter_bytes():
+                    total += len(chunk)
+                    if total > MAX_BYTES:
+                        raise DatasheetFetchError(f"{url}: file is larger than {MAX_BYTES} bytes")
+                    chunks.append(chunk)
+        except httpx.TransportError as exc:
+            raise DatasheetFetchError(f"{url}: network error {type(exc).__name__}") from exc
+    return b"".join(chunks)
+
+
 def fetch(
     url: str,
     cache: Cache,
@@ -63,21 +91,10 @@ def fetch(
         cached = DatasheetFile.model_validate_json(entry.payload)
         if cached.path.exists():
             return cached
-    with httpx.Client(
-        transport=transport,
-        timeout=60.0,
-        follow_redirects=True,
-        headers={"User-Agent": USER_AGENT},
-    ) as client:
-        try:
-            response = client.get(url)
-        except httpx.TransportError as exc:
-            raise DatasheetFetchError(f"{url}: network error {type(exc).__name__}") from exc
-    if response.status_code != 200:
-        raise DatasheetFetchError(f"{url}: HTTP {response.status_code}")
-    if len(response.content) > MAX_BYTES:
-        raise DatasheetFetchError(f"{url}: file is larger than {MAX_BYTES} bytes")
-    file = store(response.content, url, cache_dir, clock())
+    if urlsplit(url).scheme not in ("http", "https"):
+        raise DatasheetFetchError(f"{url}: only http and https URLs are fetched")
+    content = _download(url, transport)
+    file = store(content, url, cache_dir, clock())
     cache.put(DataKind.DATASHEET_FILE, url, file.model_dump_json().encode())
     return file
 

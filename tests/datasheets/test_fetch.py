@@ -82,3 +82,29 @@ def test_load_local_registers_a_file(tmp_path: Path) -> None:
     file = load_local(source, URL, tmp_path / "cache")
     assert file.path.read_bytes() == PDF
     assert file.url == URL
+
+
+def test_oversized_body_is_rejected_while_streaming(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    monkeypatch.setattr("ersatz.datasheets.fetch.MAX_BYTES", 10)
+    handler = Counter(httpx.Response(200, content=PDF))
+    with pytest.raises(DatasheetFetchError, match="larger than"):
+        fetch(URL, SqliteCache(":memory:"), tmp_path, transport=httpx.MockTransport(handler))
+
+
+def test_declared_length_over_the_cap_is_rejected(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    monkeypatch.setattr("ersatz.datasheets.fetch.MAX_BYTES", 10)
+    response = httpx.Response(200, content=b"%PDF", headers={"Content-Length": "999"})
+    with pytest.raises(DatasheetFetchError, match="larger than"):
+        fetch(
+            URL, SqliteCache(":memory:"), tmp_path, transport=httpx.MockTransport(Counter(response))
+        )
+
+
+@pytest.mark.parametrize("url", ["file:///etc/passwd", "ftp://example.invalid/a.pdf"])
+def test_only_http_urls_are_fetched(tmp_path: Path, url: str) -> None:
+    with pytest.raises(DatasheetFetchError, match="only http"):
+        fetch(url, SqliteCache(":memory:"), tmp_path)
