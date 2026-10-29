@@ -422,8 +422,8 @@ One prompt per day. Commit ranges stay inside 50 to 90 and never exceed 100. A d
 | Prompt | Day | Deliverables | Tests that prove it | Commits |
 |---|---|---|---|---|
 | E5 | 2 | uv project, ruff, mypy, pytest, pre-commit with gitleaks, GitHub Actions, ersatz.model with Source, Sourced, Part, Parameter, Package, Pinout, Lifecycle | model unit tests; invariant test that Part requires a provider Source; CI green | 55 to 70 |
-| E6 | 3 | ersatz.normalize: parse_value with pint, package groups from rules/packages.yaml, category and lifecycle mapping | property tests for units; table-driven tests for every alias and lifecycle row in DOMAIN.md | 60 to 80 |
-| E7 | 4 | ersatz.cache (SQLite), ersatz.budget, HTTP client with retries and rate limiter, Provider protocol, Digi-Key adapter, synthetic fixtures | fixture tests for auth, 429 retry, budget exhaustion; cache expiry tests; no-network test in CI | 60 to 80 |
+| E6 | 3 | ersatz.cache (SQLite), ersatz.budget, HTTP client with retries and rate limiter, Provider protocol, Digi-Key adapter, synthetic fixtures | fixture tests for auth, 429 retry, budget exhaustion; cache expiry tests; no-network test in CI | 60 to 80 |
+| E7 | 4 | ersatz.normalize: parse_value with pint, package groups from rules/packages.yaml, category and lifecycle mapping | property tests for units; table-driven tests for every alias and lifecycle row in DOMAIN.md | 60 to 80 |
 | E8 | 5 | Mouser adapter (after its terms are read), ersatz.resolve, `ersatz lookup` | resolve tests for FOUND, AMBIGUOUS, NOT_FOUND and suffixes; CLI snapshot tests; one manual live check | 55 to 75 |
 | E9 | 6 | ersatz.datasheets: fetch, page text, page selection, LLM client, extraction schema, quote verification | generated-PDF tests for page text and quote checks; schema tests; extraction mocked in CI | 60 to 80 |
 | E10 | 7 | validation rules, extraction gold set (15 per category), `ersatz eval extract`, first precision and recall table | validation unit tests; gold set loader tests; evaluation report checked in | 50 to 70 |
@@ -432,5 +432,7 @@ One prompt per day. Commit ranges stay inside 50 to 90 and never exceed 100. A d
 | E13 | 10 | FastAPI app, Postgres cache, rate limiting, deployment to Vercel | contract tests, schemathesis, deployed health check | 55 to 75 |
 | E14 | 11 | ersatz.bench: dataset v1 (50 rows), runners, token extraction, resolution, audit tool, first results | scoring tests on a synthetic run; manifest hash check; results.md generated | 60 to 85 |
 | E15 | 12 | web demo and landing page, README with benchmark table, docs pass, v0.1 tag | vitest, Playwright end to end, link check on docs | 60 to 85 |
+
+E6 and E7 run in the order of the phase prompts: provider adapters first, then the model and normalization. The provider phase built only Source and Category from ersatz.model, and ersatz.model was finished in E7. E5 landed below its range because the scaffold prompt had no feature code.
 
 The MCP server follows v0.1 if time remains.
