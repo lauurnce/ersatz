@@ -1,0 +1,25 @@
+{
+  "_fixture": "synthetic, Digi-Key Product Information v4 ProductDetails shape",
+  "Product": {
+    "Description": {"ProductDescription": "IC REG LINEAR 1.8V 150MA SOT23-5"},
+    "Manufacturer": {"Id": 9003, "Name": "Sample Devices"},
+    "ManufacturerProductNumber": "TEST-LDO18",
+    "ProductUrl": "https://www.digikey.com/en/products/detail/sample/TEST-LDO18/3",
+    "DatasheetUrl": "https://example.com/datasheets/test-ldo18.pdf",
+    "QuantityAvailable": 310,
+    "ProductStatus": {"Id": 1, "Status": "Not For New Designs"},
+    "DateLastBuyChance": null,
+    "Category": {"CategoryId": 699, "Name": "Voltage Regulators - Linear, Low Drop Out (LDO) Regulators", "ChildCategories": []},
+    "Parameters": [
+      {"ParameterId": 2002, "ParameterText": "Voltage - Input (Min)", "ValueId": "1", "ValueText": "2.5V"},
+      {"ParameterId": 2003, "ParameterText": "Voltage - Input (Max)", "ValueId": "2", "ValueText": "6V"},
+      {"ParameterId": 2004, "ParameterText": "Voltage - Output (Min/Fixed)", "ValueId": "3", "ValueText": "1.8V"},
+      {"ParameterId": 2006, "ParameterText": "Current - Output", "ValueId": "4", "ValueText": "150mA"},
+      {"ParameterId": 2007, "ParameterText": "Voltage Dropout (Max)", "ValueId": "5", "ValueText": "0.2V @ 150mA"},
+      {"ParameterId": 2008, "ParameterText": "Current - Quiescent (Iq)", "ValueId": "6", "ValueText": "1 µA"},
+      {"ParameterId": 2009, "ParameterText": "PSRR", "ValueId": "7", "ValueText": "-"},
+      {"ParameterId": 16, "ParameterText": "Package / Case", "ValueId": "8", "ValueText": "SC-74A, SOT-753"},
+      {"ParameterId": 1291, "ParameterText": "Supplier Device Package", "ValueId": "9", "ValueText": "SOT-23-5"}
+    ]
+  }
+}
