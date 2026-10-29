@@ -204,3 +204,10 @@ Date: 2026-11-08
 Decision: the provider phase ships the Digi-Key adapter with product details and keyword search. Mouser waits until its terms are read. Parametric search raises NotSupported until Digi-Key filter IDs are mapped from local recordings. Committed fixtures stay synthetic, and recordings are scrubbed and kept local.
 Reason: D-018 makes Mouser conditional on its terms. Filter IDs appear only in live responses, so guessing them would make untested code. D-019 bars committing recorded responses.
 Alternatives considered: a Mouser adapter from its public docs (risks building against terms not yet read), hard-coded filter IDs (unverified), committed recordings with values replaced (still derived from provider data).
+
+## D-030 Unit parsing and package matching never guess
+
+Date: 2026-11-09
+Decision: parse_value returns min, typ and max in SI base units with conditions keyed by quantity (I, V, f, T). It rejects text it cannot read in full: a value with a trailing tolerance such as "1.25 V ±1%", a backwards range, conflicting qualifiers, a bare number for a dimensional parameter, and any unit spelling outside a per-unit allow-list. package_group matches comma-separated provider names as alternatives and returns UNKNOWN with a reason for unknown, ambiguous, conflicting and no-lead names, and for a pin count or body width that does not fit the group. Unparsed provider strings stay on the Part verbatim with their source.
+Reason: a wrong value or footprint produces a wrong verdict, while UNKNOWN only lowers it to PARTIAL (D-017). Case matters in units ("MV" is megavolt), so spellings are allow-listed before pint sees them (DOMAIN.md section 6).
+Alternatives considered: fuzzy package matching (would guess between groups such as SOT23-5 and SOT23-6), reading tolerance as a range around the value (correct for some datasheets, wrong for others), passing raw strings to pint (accepts megavolt and years).
