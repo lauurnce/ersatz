@@ -358,6 +358,20 @@ Consequences for Ersatz:
 - Mouser is the secondary provider: lookup, a second lifecycle opinion, stock. It cannot drive candidate search.
 - Nexar is out of v0.1: the free allowance is too small to be useful, storage is capped at 24 hours, and the competing-product clause is a risk for a tool that ranks alternates.
 
+### Category mapping (UNVERIFIED)
+
+Data file: ersatz/rules/categories.yaml. Every provider string below is UNVERIFIED until it appears in a local recording, then it is marked CITED with the recording date.
+
+| Provider | Provider category | Extra check | Ersatz |
+|---|---|---|---|
+| Digi-Key | Voltage Regulators - Linear, Low Drop Out (LDO) Regulators | none | ldo |
+| Digi-Key | Instrumentation, Op Amps, Buffer Amps | Amplifier Type is General Purpose, CMOS, J-FET, Chopper (Zero-Drift) or Voltage Feedback | opamp |
+| Digi-Key | Instrumentation, Op Amps, Buffer Amps | Amplifier Type is Instrumentation, Buffer, Current Sense, Differential, Current Feedback, Programmable Gain or Video | out of scope |
+| Mouser | LDO Voltage Regulators | none | ldo |
+| Mouser | Operational Amplifiers - Op Amps | none | opamp |
+
+Any other category is out of scope. A category that needs the extra check and lacks it, or has an unlisted value, is UNKNOWN.
+
 ### Sources
 
 - [V1] Digi-Key API documentation: https://developer.digikey.com/documentation
