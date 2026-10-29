@@ -1,0 +1,36 @@
+# Provider taxonomy to Ersatz categories. Mirrors docs/DOMAIN.md section 5,
+# "Category mapping". Every string is UNVERIFIED until it is seen in a local
+# recording; anything not listed is out of scope.
+version: 1
+providers:
+  digikey:
+    ldo:
+      categories:
+        - "Voltage Regulators - Linear, Low Drop Out (LDO) Regulators"
+    opamp:
+      categories:
+        - "Instrumentation, Op Amps, Buffer Amps"
+      # This category also holds instrumentation, buffer and other amplifiers.
+      # Only these values of the "Amplifier Type" parameter are op-amps.
+      parameter: "Amplifier Type"
+      in_scope:
+        - "General Purpose"
+        - "CMOS"
+        - "J-FET"
+        - "Chopper (Zero-Drift)"
+        - "Voltage Feedback"
+      out_of_scope:
+        - "Instrumentation"
+        - "Buffer"
+        - "Current Sense"
+        - "Differential"
+        - "Current Feedback"
+        - "Programmable Gain"
+        - "Video"
+  mouser:
+    ldo:
+      categories:
+        - "LDO Voltage Regulators"
+    opamp:
+      categories:
+        - "Operational Amplifiers - Op Amps"
