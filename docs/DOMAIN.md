@@ -466,3 +466,27 @@ pint defines "micro- = 1e-6 = μ- = µ- = u- = mu- = mc-", "ppm = 1e-6" and "per
 - [X18] Texas Instruments SLOA083, Understanding Op Amp Parameters: https://e2e.ti.com/cfs-file/__key/telligent-evolution-components-attachments/00-14-01-00-00-99-01-86/Understanding-Op-Amp-Parameters.pdf
 - [X19] Texas Instruments SZZA036C, Understanding and Interpreting Standard-Logic Data Sheets: https://www.ti.com/document-viewer/lit/html/SZZA036
 - [X20] World Bank AI4Data cookbook, scanned documents: https://worldbank.github.io/ai4data/cookbook/data-from-documents/scanned
+
+## 7. Related work and positioning
+
+- Z2Data argues that general language models return "Non-existent part numbers that follow a plausible naming pattern but were never manufactured" and "can't confirm whether a part number is still active or has entered into NRND" [W1]. It reports no measured error rate.
+- Zenode Alts takes a part number, "extracts specs, pinouts, and package info from datasheets" and returns alternates "scored on functional match, availability, and lifecycle" [W2]. It is closed and publishes no accuracy figures. Its own site refused retrieval; the description comes from an investor write-up.
+- Octopart and Nexar offer similar parts "identified by Nexar to be similar in specification and functionality" [W3].
+- SiliconExpert grades crosses from A (drop-in) to SF (similar functionality) [F4] and covers "over a billion electronic parts" [W4].
+- Research benchmarks test language models on board-level design (HWE-Bench, best pass rate 8.15 percent [W5]), PCB question answering (PCB-QA [W6]) and power supply design [W7]. None tests replacement recommendations against manufacturer notices.
+- The closest method is the study of invented software package names, which checks every suggested name against a registry and reports rates of "at least 5.2% for commercial models and 21.7% for open-source models" [W8]. Ersatz-Bench applies the same existence check to part numbers.
+
+### Where Ersatz differs
+
+Ersatz is open source and every value it shows links to the provider response or datasheet page it came from. It never generates a part number: candidates come only from provider responses, and a language model is used only to read datasheets. Its matching rules are published in this document with sources, so a component engineer can audit why a candidate passed or failed. Its verify mode checks a replacement someone else suggested, including a chatbot's, instead of only proposing its own. Ersatz-Bench publishes a measured rate of invented, inactive and mismatched chatbot suggestions with raw data, which no commercial tool or paper found here provides.
+
+### Sources
+
+- [W1] Z2Data, Using AI for electronic part search is more risky than you think: https://www.z2data.com/insights/using-ai-for-electronic-part-search-is-more-risky-than-you-think
+- [W2] Bee Partners, Zenode Alts: https://beepartners.vc/zenode-alts-component-search
+- [W3] Altium, Octopart API example queries: https://www.altium.com/documentation/altium-developer-center/octopart/api/example-queries
+- [W4] Altium, SiliconExpert: https://www.altium.com/capabilities/supply-chain/siliconexpert
+- [W5] HWE-Bench: https://arxiv.org/abs/2603.18102
+- [W6] PCB-QA: https://arxiv.org/abs/2606.23704
+- [W7] Evaluating LLM-based workflows for switched-mode power supply design: https://arxiv.org/abs/2507.10639
+- [W8] Package hallucination study, USENIX Security 2025: https://arxiv.org/abs/2406.10279
