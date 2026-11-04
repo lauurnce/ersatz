@@ -120,3 +120,10 @@ Date: 2026-11-04
 Decision: every function rule is a one-direction comparison ("equal or better"), following TI's drop-in definition "parametrically equivalent or better". No plus or minus tolerance is applied unless a rule row in docs/DOMAIN.md states one. Rules compare guaranteed min or max columns where available; typical-only comparisons and mismatched test conditions give WARN.
 Reason: no manufacturer, distributor or standard publishes a numeric tolerance for "functionally equivalent". An invented window would be an uncited rule.
 Alternatives considered: percentage windows per parameter (uncited), a weighted score (hides which rule failed).
+
+## D-018 Provider set for v0.1
+
+Date: 2026-11-04
+Decision: Digi-Key is the primary provider (lookup, lifecycle, parametric search). Mouser is secondary (lookup, lifecycle, stock), with its terms read in full before its adapter is written. Nexar is not used in v0.1. This refines D-002.
+Reason: Digi-Key is the only free API with parametric filtering. Mouser has no attribute filters. Nexar's free allowance is 100 to 1,000 parts in total, storage is limited to 24 hours, and its terms bar competing products.
+Alternatives considered: Nexar as primary (allowance and terms), Mouser only (no candidate search).
