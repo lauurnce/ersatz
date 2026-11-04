@@ -106,3 +106,10 @@ Date: 2026-11-04
 Decision: map every provider and manufacturer status to ACTIVE, NRND, LAST_TIME_BUY, OBSOLETE or UNKNOWN using the table in docs/DOMAIN.md section 1. "EOL" is never stored; it becomes LAST_TIME_BUY or OBSOLETE by last order date. "Discontinued at Digi-Key" maps to UNKNOWN. When providers disagree, verdicts use the status furthest along the sequence and every provider's value is shown.
 Reason: manufacturers use different status sets, and EOL means different things at TI and Renesas. A distributor dropping a part is not a manufacturer discontinuance.
 Alternatives considered: trusting one provider (hides disagreement), using the most optimistic status (unsafe).
+
+## D-016 Package equivalence groups
+
+Date: 2026-11-04
+Decision: form is scored by package group (same lead count, pitch and span) plus maximum height, using the cited table in docs/DOMAIN.md section 2. Lower height is PASS, higher height is WARN. Ambiguous names without a body width, and all no-lead packages (DFN, WSON, QFN), score UNKNOWN.
+Reason: aliases such as SOT-23-5, SOT-25 and SC-74A share a land pattern, while "TSSOP-8" names two different bodies and no-lead pads differ per drawing.
+Alternatives considered: exact name match (misses true aliases), IPC-7351 names only (rarely present in provider data).
