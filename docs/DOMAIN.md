@@ -257,3 +257,58 @@ IN, OUT, GND, EN, NR (noise reduction or bypass), PG (power good), ADJ, SENSE, N
 - [R9] onsemi MC7800 datasheet: https://www.onsemi.com/pdf/datasheet/mc7800-d.pdf
 - [R10] Texas Instruments LM317 datasheet: https://www.ti.com/lit/ds/symlink/lm317.pdf
 - [R11] Texas Instruments LM1117 datasheet: https://www.ti.com/lit/ds/symlink/lm1117.pdf
+
+## 4. Op-amp rules
+
+Same conventions as section 3.
+
+| ID | Parameter | Rule | Result if broken | Source |
+|---|---|---|---|---|
+| OPA-01 | Channels per package | C equals O | FAIL | [P1] |
+| OPA-02 | Supply range (total) | C min <= O min and C max >= O max | FAIL | [P2], [P3] |
+| OPA-03 | Gain bandwidth product | C >= O; flag C above 10 times O | FAIL if lower, WARN if far higher (stability margin) | [P2] |
+| OPA-04 | Slew rate | C >= O | FAIL | [P2] |
+| OPA-05 | Input offset voltage | C maximum <= O maximum at the same temperature | WARN | [P2], [P4] |
+| OPA-06 | Input bias current | C <= O; input stage type (bipolar, JFET, CMOS) should match | WARN | [P2] |
+| OPA-07 | Rail-to-rail input | C includes every rail O includes | FAIL | [P2], [P4], [P5] |
+| OPA-08 | Rail-to-rail output | C swings at least as close to the rails as O at the same load | FAIL | [P2], [P5] |
+| OPA-09 | Input common-mode range | C range contains O range | FAIL | [P2] |
+| OPA-10 | Voltage noise density | C <= O at the same frequency, usually 1 kHz | WARN | [P2], [P3] |
+| OPA-11 | Minimum stable gain | C <= O; unity-gain stable is always safe | FAIL | [P2], [P6] |
+| OPA-12 | Quiescent current per channel | normalize to per channel, then C <= O | WARN | [P2], [P4] |
+| OPA-13 | Pinout | pin function map equal (fit rule) | FAIL | [P3], [P4], [P5], [P7] |
+
+Definitions behind the rules (CITED, [P2]):
+- Gain bandwidth: "GBW specifies the gain-bandwidth product of the op amp in an open loop configuration and the output loaded".
+- Slew rate: "the rate of change in the output voltage caused by a step input".
+- Input offset voltage: "the DC voltage that must be applied between the input terminals to force the quiescent DC output voltage to zero".
+- Common-mode range: "the range over which normal operation is guaranteed".
+- Supply current is "usually the total quiescent current draw for the whole package", with named exceptions, so OPA-12 normalizes per channel.
+- Decompensated parts exist: "Some op amps come in de-compensated versions" ([P2]); one family pairs a "Unity-gain stable" part with one "Stable in gain ≥ 5" ([P6]).
+
+### Standard pinouts (CITED)
+
+Single op-amp, 8 pin, industry standard ([P3]): 1 OFFSET N1, 2 IN-, 3 IN+, 4 V-, 5 OFFSET N2, 6 OUT, 7 V+, 8 NC. Current production of the same family lists pins 1, 5 and 8 as "Do not connect" in some packages ([P3]), so offset null pins are treated as NC-compatible with a WARN.
+
+Dual op-amp, 8 pin, industry standard ([P4], [P5]): 1 OUT A, 2 IN- A, 3 IN+ A, 4 V-, 5 IN+ B, 6 IN- B, 7 OUT B, 8 V+.
+
+Single op-amp in SOT-23-5 is not standardized. Three TI parts use three maps:
+- 1 IN+, 2 V-, 3 IN-, 4 OUT, 5 V+ ([P5])
+- 1 OUT, 2 V-, 3 IN+, 4 IN-, 5 V+ ([P3])
+- 1 OUT, 2 V+, 3 IN+, 4 IN-, 5 V- ([P7])
+
+Ersatz never assumes a SOT-23-5 pinout. It compares extracted pin tables, and a part without one scores fit UNKNOWN.
+
+### Op-amp pin vocabulary (PROPOSED)
+
+Per channel: INP, INN, OUT. Shared: VCC (V+), VEE (V-), NULL, SHDN, NC.
+
+### Sources
+
+- [P1] Texas Instruments LM358 datasheet: https://www.ti.com/lit/ds/symlink/lm358.pdf
+- [P2] Texas Instruments SLOA011B, Understanding Operational Amplifier Specifications: https://www.ti.com/lit/an/sloa011b/sloa011b.pdf
+- [P3] Texas Instruments TL071 datasheet: https://www.ti.com/lit/ds/symlink/tl071.pdf
+- [P4] Texas Instruments LM358 datasheet: https://www.ti.com/lit/ds/symlink/lm358.pdf
+- [P5] Texas Instruments LMV321 family datasheet: https://www.ti.com/lit/ds/symlink/lmv321.pdf
+- [P6] Texas Instruments OPA627 and OPA637 datasheet: https://www.ti.com/lit/ds/symlink/opa637.pdf
+- [P7] Texas Instruments LMC7101 datasheet: https://www.ti.com/lit/ds/symlink/lmc7101.pdf
