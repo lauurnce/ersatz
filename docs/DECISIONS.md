@@ -113,3 +113,10 @@ Date: 2026-11-04
 Decision: form is scored by package group (same lead count, pitch and span) plus maximum height, using the cited table in docs/DOMAIN.md section 2. Lower height is PASS, higher height is WARN. Ambiguous names without a body width, and all no-lead packages (DFN, WSON, QFN), score UNKNOWN.
 Reason: aliases such as SOT-23-5, SOT-25 and SC-74A share a land pattern, while "TSSOP-8" names two different bodies and no-lead pads differ per drawing.
 Alternatives considered: exact name match (misses true aliases), IPC-7351 names only (rarely present in provider data).
+
+## D-017 One-direction function rules without numeric windows
+
+Date: 2026-11-04
+Decision: every function rule is a one-direction comparison ("equal or better"), following TI's drop-in definition "parametrically equivalent or better". No plus or minus tolerance is applied unless a rule row in docs/DOMAIN.md states one. Rules compare guaranteed min or max columns where available; typical-only comparisons and mismatched test conditions give WARN.
+Reason: no manufacturer, distributor or standard publishes a numeric tolerance for "functionally equivalent". An invented window would be an uncited rule.
+Alternatives considered: percentage windows per parameter (uncited), a weighted score (hides which rule failed).
