@@ -312,3 +312,66 @@ Per channel: INP, INN, OUT. Shared: VCC (V+), VEE (V-), NULL, SHDN, NC.
 - [P5] Texas Instruments LMV321 family datasheet: https://www.ti.com/lit/ds/symlink/lmv321.pdf
 - [P6] Texas Instruments OPA627 and OPA637 datasheet: https://www.ti.com/lit/ds/symlink/opa637.pdf
 - [P7] Texas Instruments LMC7101 datasheet: https://www.ti.com/lit/ds/symlink/lmc7101.pdf
+
+## 5. Providers
+
+| | Digi-Key Product Information v4 | Mouser Search API | Nexar (Octopart) |
+|---|---|---|---|
+| Auth | OAuth2, client credentials or authorization code; token endpoint https://api.digikey.com/v1/oauth2/token; 2-legged token lives "10 minutes"; headers X-DIGIKEY-Client-Id and Bearer token [V1] | API key as the apiKey query parameter [V4] | OAuth2 client credentials at identity.nexar.com, scope supply.domain; "Access tokens live for 24 hours" [V7] |
+| Part details | GET /products/v4/search/{productNumber}/productdetails, optional manufacturerId [V2] | POST /api/v1/search/partnumber (max 50 parts), POST /api/v2/search/partnumberandmanufacturer [V4] | GraphQL supSearchMpn and supMultiMatch (exact match) [V8] |
+| Parametric search | Yes. POST /products/v4/search/keyword with ParameterFilterRequest by numeric ParameterId and value ids [V3] | No. Keyword search with one of None, Rohs, InStock, RohsAndInStock [V4] | Yes. supSearch filters by attribute shortname, ranges like "(8__16)" [V9] |
+| Lifecycle | ProductStatus.Status, EndOfLife, Discontinued, DateLastBuyChance [V2] | LifecycleStatus, IsDiscontinued [V4] | spec lifecyclestatus [V10] |
+| Datasheet, parameters, stock | DatasheetUrl; Parameters with ParameterType; QuantityAvailable [V2] | DataSheetUrl; ProductAttributes; Availability, AvailabilityInStock [V4] | bestDatasheet; specs; sellers.offers.inventoryLevel [V8] |
+| Substitutes | GET /products/v4/search/{productNumber}/substitutions; SubstituteType has no documented values [V5] | SuggestedReplacement (string), source undocumented [V4] | similarParts, "similar in specification and functionality" [V11] |
+| Free limits | "120 per minute" and "1000 per day" for Product Information [V1]; exceeding gives "a ten-minute suspension" [V6] | 1,000 calls per day and 30 per minute (UNVERIFIED, search snippets only) | Evaluation plan "Up to 100 matched parts" [V12]; FAQ says 1000 [V13]; conflict UNVERIFIED |
+| Sandbox | Yes; data "may not match your request" [V14] | None documented | None |
+
+### Terms that shape the design (CITED unless marked)
+
+Digi-Key API user agreement [V6]:
+- Permitted uses are "your public website" and internal purchasing applications, "in ways that complement and enhance DigiKey's own services".
+- §3.2(iv): may not "distribute or disclose DigiKey Data to any third parties" outside those uses.
+- §3.1.4: "You must clearly and conspicuously attribute DigiKey as the source of all DigiKey Data."
+- §5.1(b): may not "aggregate, in any way, any DigiKey Data with third party content or data without distinction".
+- §5.1(e): may not "use the API, DigiKey Data, or Documentation to update or create your own database of information".
+- §5.1(a): may not use it "in a way that is competitive to or inconsistent with DigiKey's services".
+- No caching clause exists. §4 treats "Any data derived from DigiKey Data" as Digi-Key confidential information.
+
+Mouser API terms: the terms page refused automated retrieval. Search snippets show a license "to copy and display the Mouser Electronics Data solely on your Application", required attribution, and a bar on creating "your own database". All Mouser terms are UNVERIFIED until read in full before the Mouser adapter is written.
+
+Nexar API terms [V15]:
+- §1.2(vi): may not "use the Nexar API to cache and/or store data for more than twenty-four (24) hours".
+- §1.2(v): may not "self-host any content including but not limited to datasheets and images".
+- §1.2(vii): may not use it for "(a) benchmarking or competitive analysis of the Nexar API; (b) developing, using, or providing a competing software product or service".
+- §1.4: requires a followable link to octopart.com on indexable pages.
+
+Consequences for Ersatz:
+1. No recorded provider response is committed to the public repository. Test fixtures are synthetic (D-019).
+2. Every displayed value carries its provider name, which also satisfies the attribution and "without distinction" clauses.
+3. Provider data in the cache has a time-to-live and is never exported. The benchmark dataset stores no provider data.
+4. Datasheets are linked, never re-hosted.
+5. The public demo is a reference-checking tool that links to distributor product pages. Whether that counts as "complement and enhance" under Digi-Key §5.1(a) is a judgment call, recorded as a risk.
+
+### Recommendation (PROPOSED, D-018)
+
+- Digi-Key is the primary provider: lookup, lifecycle, and the only free parametric search.
+- Mouser is the secondary provider: lookup, a second lifecycle opinion, stock. It cannot drive candidate search.
+- Nexar is out of v0.1: the free allowance is too small to be useful, storage is capped at 24 hours, and the competing-product clause is a risk for a tool that ranks alternates.
+
+### Sources
+
+- [V1] Digi-Key API documentation: https://developer.digikey.com/documentation
+- [V2] Digi-Key ProductDetails OpenAPI: https://developer.digikey.com/node/2360/oas-download
+- [V3] Digi-Key KeywordSearch OpenAPI: https://developer.digikey.com/node/2357/oas-download
+- [V4] Mouser Search API Swagger V1 and V2: https://api.mouser.com/api/docs/V1 and https://api.mouser.com/api/docs/V2
+- [V5] Digi-Key Substitutions OpenAPI: https://developer.digikey.com/node/2378/oas-download
+- [V6] Digi-Key API user agreement: https://developer.digikey.com/api-user-agreement
+- [V7] Nexar, application access token: https://support.nexar.com/support/solutions/articles/101000452406-application-access-token
+- [V8] Nexar, playground query examples: https://support.nexar.com/support/solutions/articles/101000494582-nexar-playground-graphql-query-examples
+- [V9] Nexar, sorting and filtering: https://support.nexar.com/support/solutions/articles/101000452264-supply-sorting-and-filtering-your-queries
+- [V10] Nexar, lifecycle information: https://support.nexar.com/support/solutions/articles/101000434626-supply-lifecycle-information-for-parts
+- [V11] Nexar, similar parts: https://support.nexar.com/support/solutions/articles/101000434631-supply-similar-parts
+- [V12] Nexar, compare plans: https://nexar.com/compare-plans
+- [V13] Nexar, frequently asked questions: https://support.nexar.com/support/solutions/articles/101000497890-frequently-asked-questions
+- [V14] Digi-Key FAQ: https://developer.digikey.com/faq
+- [V15] Nexar API license terms of use (Altium, last updated 2022-08-01): https://nexar.com/api/legal
