@@ -375,3 +375,94 @@ Consequences for Ersatz:
 - [V13] Nexar, frequently asked questions: https://support.nexar.com/support/solutions/articles/101000497890-frequently-asked-questions
 - [V14] Digi-Key FAQ: https://developer.digikey.com/faq
 - [V15] Nexar API license terms of use (Altium, last updated 2022-08-01): https://nexar.com/api/legal
+
+## 6. Datasheet extraction
+
+### PDF libraries (CITED from each project's PyPI page)
+
+| Library | License | Tables | Text with coordinates | OCR | Use in Ersatz |
+|---|---|---|---|---|---|
+| pdfplumber | MIT [X1] | yes, table to row to cell | yes, per character | no | primary text and table layer |
+| pypdfium2 | BSD-3-Clause, Apache-2.0 [X2] | no | per character boxes | no, renders pages | page rendering |
+| pdfminer.six | MIT [X3] | no | yes | no | used through pdfplumber |
+| pypdf | BSD-3-Clause [X4] | no | partial | no | not used |
+| PyMuPDF | "GNU AFFERO GPL 3.0 or Artifex Commercial License" [X5] | yes | yes | Tesseract | not used: AGPL obligations apply to a hosted API |
+| Camelot | MIT [X6] | yes, lattice and stream | tables only | optional | fallback for hard tables |
+| docling | MIT [X7] | yes, ML models | yes | yes | optional later path |
+| marker | Apache-2.0 code, model weights under a modified OpenRAIL-M license with a revenue threshold [X8] | yes | yes | yes | not used: weight license |
+| unstructured | Apache-2.0 [X9] | yes, as HTML | yes | yes | not used |
+| OCRmyPDF | MPL-2.0 [X10] | no | no | adds a text layer | out of v0.1 (no OCR) |
+
+### Language model features (CITED)
+
+- PDF input: "Maximum pages per request" is 600, and "Each page typically uses 1,500–3,000 tokens depending on content density" [X11]. Each page is sent as an image plus its extracted text.
+- Citations return page_location with 1-indexed "start_page_number" and exclusive "end_page_number" [X12].
+- Structured outputs use output_config.format with a JSON schema [X13]. "Numerical constraints (such as minimum, maximum, multipleOf)" are not supported, so range checks happen in code.
+- "Citations cannot be used together with structured outputs." [X12]
+- Batch requests are "charged at 50 percent of the standard API prices" [X14].
+
+### Citation strategy (PROPOSED, D-021)
+
+Because API citations and structured outputs cannot be combined, Ersatz does not rely on API citations:
+1. Select pages by keyword from pdfplumber text (ordering information, pin configuration, electrical characteristics, recommended operating conditions, absolute maximum ratings, package information).
+2. Send only those pages with a strict schema in which every field carries the value as a string, the unit as a string, min, typ and max columns, the test condition, the page number and a verbatim quote of at most 200 characters.
+3. Verify each quote locally: after whitespace and Unicode normalization, the quote must appear on the cited page's pdfplumber text, and the value string must appear inside the quote. Failing values are dropped and logged, never shown.
+4. Parse units deterministically (below) and validate (below).
+
+### Unit parsing with pint (CITED from the pint project, BSD-3-Clause [X15])
+
+pint defines "micro- = 1e-6 = μ- = µ- = u- = mu- = mc-", "ppm = 1e-6" and "percent = 0.01 = %" [X16]. Pitfalls found by running pint 0.24.4 locally:
+- "50 ppm/°C" raises an offset unit error; the denominator must be rewritten as delta_degC first. pint documents that offset units in products are "problematic" [X17].
+- "1.2 to 3.3 V" and "1.2-3.3 V" do not parse; ranges are split by regex before pint sees them.
+- "±2 %" parses as 2 percent with the sign dropped; tolerances are split first.
+- "a" is the year unit and "MV" is megavolt; case is significant, so unit strings are matched against an allow-list per parameter before parsing.
+- Pin pint at 0.24.2 or later, which accepts both micro code points and "u".
+
+### Reading pitfalls (CITED)
+
+- Typical is not guaranteed. "The typical value published in the data sheet is the mean or average value of the distribution" [X18]. Rules compare guaranteed min or max columns where they exist and fall back to typical with a WARN.
+- Conditions live in headers and footnotes, for example "All typical values are at VCC = 3.3 V, TA = 25°C" [X19]. The extraction schema carries the condition text for every value.
+- Sign convention: "maximum refers to the most-positive value" [X19].
+- Absolute maximum ratings "are stress ratings only" [X19] and are never used as operating limits.
+- Package and variant: one datasheet covers several packages, and the orderable part number table maps suffixes to packages [X19]. Extraction reads that table first and then extracts values per variant.
+- Revision: TI literature numbers end in a revision letter with dates, for example "SZZA036C – December 2002 – Revised June 2016" [X19]. Every extraction stores the literature number, revision and SHA-256.
+- Image-only PDFs: a page with no or very few characters is an image [X20]. Such datasheets are UNEXTRACTED in v0.1.
+
+### Validation rules
+
+| Rule | Status |
+|---|---|
+| min <= typ <= max for every value | CITED convention [X19] |
+| Every value has a page and a verified quote | PROPOSED |
+| LDO: minimum input voltage >= output voltage + dropout | CITED basis [R3] |
+| LDO: output voltage < maximum recommended input voltage | PROPOSED |
+| LDO: 0 < dropout < output voltage; dropout has a current condition | PROPOSED, basis [R4] |
+| LDO: quiescent current < rated output current; shutdown current <= quiescent current | PROPOSED |
+| LDO: accuracy magnitude <= 10 percent | PROPOSED |
+| Op-amp: slew rate > 0, GBW > 0 | CITED definitions [P2] |
+| Op-amp: supply min < supply max <= absolute maximum | PROPOSED |
+| Op-amp: output swing within the supply rails | PROPOSED |
+| Units: parsed dimension matches the parameter's dimension | PROPOSED |
+
+### Sources
+
+- [X1] https://pypi.org/project/pdfplumber/
+- [X2] https://pypi.org/project/pypdfium2/
+- [X3] https://pypi.org/project/pdfminer.six/
+- [X4] https://pypi.org/project/pypdf/
+- [X5] https://pypi.org/project/PyMuPDF/
+- [X6] https://pypi.org/project/camelot-py/
+- [X7] https://pypi.org/project/docling/
+- [X8] https://pypi.org/project/marker-pdf/
+- [X9] https://pypi.org/project/unstructured/
+- [X10] https://pypi.org/project/ocrmypdf/
+- [X11] Claude PDF support: https://platform.claude.com/docs/en/build-with-claude/pdf-support
+- [X12] Claude citations: https://platform.claude.com/docs/en/build-with-claude/citations
+- [X13] Claude structured outputs: https://platform.claude.com/docs/en/build-with-claude/structured-outputs
+- [X14] Claude batch processing: https://platform.claude.com/docs/en/build-with-claude/batch-processing
+- [X15] https://pypi.org/project/Pint/
+- [X16] pint default unit definitions: https://raw.githubusercontent.com/hgrecco/pint/master/pint/default_en.txt
+- [X17] pint non-multiplicative units: https://pint.readthedocs.io/en/stable/user/nonmult.html
+- [X18] Texas Instruments SLOA083, Understanding Op Amp Parameters: https://e2e.ti.com/cfs-file/__key/telligent-evolution-components-attachments/00-14-01-00-00-99-01-86/Understanding-Op-Amp-Parameters.pdf
+- [X19] Texas Instruments SZZA036C, Understanding and Interpreting Standard-Logic Data Sheets: https://www.ti.com/document-viewer/lit/html/SZZA036
+- [X20] World Bank AI4Data cookbook, scanned documents: https://worldbank.github.io/ai4data/cookbook/data-from-documents/scanned
