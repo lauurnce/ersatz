@@ -185,3 +185,75 @@ Ambiguous names: "SOP-8" can mean the 3.9 mm MS-012 body or a 5.3 mm body, and "
 - [F22] JEDEC MO index: https://www.jedec.org/sites/default/files/MOINDEX.pdf
 - [F23] PCB Libraries, footprint naming design options: https://www.pcblibraries.com/Products/FPX/UserGuide/Console%20Options/3.2%20Design.asp
 - [F24] IPC-7351B naming convention summary: https://www.pcb-3d.com/wordpress/tutorials/ipc-7351b-naming-convention-for-surface-mount-device-3d-models-and-footprints/
+
+## 3. LDO regulator rules
+
+Every rule compares a candidate (C) with the original (O). A rule returns PASS, WARN, FAIL or UNKNOWN. A rule whose input value is missing on either side returns UNKNOWN. A rule whose test conditions differ between the two datasheets returns WARN at best. Directions follow TI's drop-in definition, "parametrically equivalent or better" ([F2]). Numeric slack is never added unless a row says so (PROPOSED, D-017).
+
+| ID | Parameter | Rule | Result if broken | Source |
+|---|---|---|---|---|
+| LDO-01 | Output type | Fixed or adjustable must match | FAIL | [R1] |
+| LDO-02 | Nominal output voltage (fixed) | C equals O exactly | FAIL | [R1] |
+| LDO-03 | Reference voltage (adjustable) | C equals O exactly | WARN, divider must be recomputed | [R1] |
+| LDO-04 | Input voltage range (recommended operating) | C min <= O min and C max >= O max | FAIL | [R2] |
+| LDO-05 | Absolute maximum input voltage | C >= O | FAIL | [R2] |
+| LDO-06 | Output voltage accuracy | C band <= O band, compared over temperature when both give it | WARN | [R3] |
+| LDO-07 | Rated output current | C >= O | FAIL | [R2] |
+| LDO-08 | Dropout voltage | C <= O at the same output current; a value without a current condition is UNKNOWN | FAIL if higher at same current, WARN if conditions differ | [R3], [R4] |
+| LDO-09 | Quiescent or ground current | C <= O at the same load | WARN | [R3] |
+| LDO-10 | Shutdown current | C <= O | WARN | [R3] |
+| LDO-11 | PSRR | C >= O at the same frequency and load | WARN | [R3], [R4] |
+| LDO-12 | Line and load regulation | C <= O over the same span | WARN | [R3] |
+| LDO-13 | Output capacitor stability | see below | FAIL or WARN | [R5], [R6], [R7] |
+| LDO-14 | Enable pin | Same polarity and floating default; C high threshold <= O, C low threshold >= O | FAIL on polarity, WARN on thresholds | [R2] |
+| LDO-15 | Thermal | C junction-to-ambient resistance <= O in the same package; C max junction temperature >= O | WARN | [R3], [R4] |
+| LDO-16 | Tab or exposed pad connection | Must match (fit rule) | FAIL | [R8], [R9], [R10], [R11] |
+
+Definitions behind the rules (CITED):
+- Dropout is "the input-to-output differential voltage at which the circuit ceases to regulate against further reductions in input voltage" ([R3]). It rises with output current and "PMOS architectures will have lower dropout at higher output voltages" ([R4]). A dropout value is only comparable at the same current and output voltage.
+- Quiescent current "is the difference between input and output currents" ([R3]). For bipolar parts it "increases proportionally with the output current" ([R4]).
+- PSRR is typically given "at a frequency of 120Hz or 1kHz" ([R4]). Values at different frequencies are not compared.
+
+### Output capacitor stability (LDO-13)
+
+Older LDOs are stable only inside an ESR window. Newer ones are stable with low-ESR ceramic capacitors (CITED):
+- "Virtually all LDO regulators require that the ESR of the output capacitor be within a set range to assure regulator stability" and large ceramic capacitors "typically have very low ESR values (< 20 mΩ)" ([R6]).
+- Older TI datasheets "designed when tantalum or high-ESR capacitors were more common" specify a capacitor value and an ESR range; newer devices are "inherently ceramic capacitor stable" ([R5]).
+- One older part requires an output capacitor ESR "between 0.3 Ω to 22 Ω" ([R11]).
+
+Ersatz classifies each LDO as CERAMIC_STABLE, ESR_WINDOW (with min and max ESR) or UNKNOWN (PROPOSED):
+
+| Original | Candidate | Result |
+|---|---|---|
+| ESR_WINDOW | CERAMIC_STABLE | PASS, with a note that the board may carry an unneeded tantalum capacitor |
+| ESR_WINDOW | ESR_WINDOW | PASS if C window contains O window, else WARN |
+| CERAMIC_STABLE | CERAMIC_STABLE | PASS if C minimum capacitance <= O minimum |
+| CERAMIC_STABLE | ESR_WINDOW with minimum ESR above 20 mΩ | FAIL: the ceramic capacitor on the board is outside the candidate's stable range |
+| any | UNKNOWN | UNKNOWN |
+
+### Regulator tab connections (CITED)
+
+The tab is not the same pin across families, so a three-lead match is not enough:
+- 78xx family: "Heatsink surface connected to Pin 2", which is Ground ([R9]); TI's LM340 drawing reads "TAB IS GND" ([R8]).
+- LM317: "OUTPUT 2, TAB" ([R10]).
+- LM1117 in SOT-223: the tab is VOUT ([R11]).
+
+Fitting a part whose tab is OUT into a board where the tab copper is GND shorts the output to ground. LDO-16 is a fit rule and always FAIL on mismatch.
+
+### LDO pin vocabulary (PROPOSED)
+
+IN, OUT, GND, EN, NR (noise reduction or bypass), PG (power good), ADJ, SENSE, NC, TAB. TAB carries the function it is connected to, for example TAB=GND.
+
+### Sources
+
+- [R1] Texas Instruments LM1117 datasheet: https://www.ti.com/lit/ds/symlink/lm1117.pdf and LM317 datasheet: https://www.ti.com/lit/ds/symlink/lm317.pdf
+- [R2] Texas Instruments TPS7A02 datasheet (example of recommended operating conditions and EN thresholds): https://www.ti.com/lit/ds/symlink/tps7a02.pdf
+- [R3] Texas Instruments SLVA079, Understanding the terms and definitions of LDO voltage regulators: https://www.ti.com/lit/an/slva079/slva079.pdf
+- [R4] Texas Instruments LDO Basics e-book, Rev. A: https://e2e.ti.com/cfs-file/__key/communityserver-discussions-components-files/196/slyy151a.pdf
+- [R5] Texas Instruments SLVA115A, ESR, Stability, and the LDO Regulator: https://www.ti.com/lit/an/slva115/slva115.pdf
+- [R6] Texas Instruments SNVA020B (AN-1148): https://www.ti.com/lit/an/snva020b/snva020b.pdf
+- [R7] Texas Instruments SLVA072, Technical Review of Low Dropout Voltage Regulator Operation and Performance: https://www.ti.com/lit/an/slva072/slva072.pdf
+- [R8] Texas Instruments LM340 datasheet: https://www.ti.com/lit/ds/symlink/lm340.pdf
+- [R9] onsemi MC7800 datasheet: https://www.onsemi.com/pdf/datasheet/mc7800-d.pdf
+- [R10] Texas Instruments LM317 datasheet: https://www.ti.com/lit/ds/symlink/lm317.pdf
+- [R11] Texas Instruments LM1117 datasheet: https://www.ti.com/lit/ds/symlink/lm1117.pdf
