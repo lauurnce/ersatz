@@ -127,3 +127,10 @@ Date: 2026-11-04
 Decision: Digi-Key is the primary provider (lookup, lifecycle, parametric search). Mouser is secondary (lookup, lifecycle, stock), with its terms read in full before its adapter is written. Nexar is not used in v0.1. This refines D-002.
 Reason: Digi-Key is the only free API with parametric filtering. Mouser has no attribute filters. Nexar's free allowance is 100 to 1,000 parts in total, storage is limited to 24 hours, and its terms bar competing products.
 Alternatives considered: Nexar as primary (allowance and terms), Mouser only (no candidate search).
+
+## D-019 Synthetic provider fixtures
+
+Date: 2026-11-04
+Decision: supersedes D-003. No recorded provider response is committed. Test fixtures are synthetic: they follow each provider's published schema, use invented values and part numbers that start with TEST-, and are marked as synthetic. Real recordings live only in the local, git-ignored cache and are used by an opt-in local test run.
+Reason: Digi-Key §3.2(iv) bars disclosing DigiKey Data to third parties and §5.1(e) bars building a database from it; Nexar §1.2(vi) bars storing data beyond 24 hours; Mouser's terms are unread. A public repository is a disclosure under each.
+Alternatives considered: small trimmed recordings (still a disclosure), no fixtures (tests would need the network and keys).
