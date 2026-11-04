@@ -99,3 +99,10 @@ Date: 2026-11-09
 Decision: every output surface (CLI, API JSON, web) carries the notice that replacements must be validated by an engineer, as a field in the result, not only as page text.
 Reason: the notice must survive copy and paste and machine consumption.
 Alternatives considered: page footer only.
+
+## D-015 Lifecycle mapping and conflicts
+
+Date: 2026-11-04
+Decision: map every provider and manufacturer status to ACTIVE, NRND, LAST_TIME_BUY, OBSOLETE or UNKNOWN using the table in docs/DOMAIN.md section 1. "EOL" is never stored; it becomes LAST_TIME_BUY or OBSOLETE by last order date. "Discontinued at Digi-Key" maps to UNKNOWN. When providers disagree, verdicts use the status furthest along the sequence and every provider's value is shown.
+Reason: manufacturers use different status sets, and EOL means different things at TI and Renesas. A distributor dropping a part is not a manufacturer discontinuance.
+Alternatives considered: trusting one provider (hides disagreement), using the most optimistic status (unsafe).
