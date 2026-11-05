@@ -4,16 +4,17 @@ One prompt is one phase. Each phase ends with a Gate Report and waits for approv
 
 - [x] E1 (Day 1): project brief, hard parts, assumptions, risks, questions
 - [x] E2 (Day 1): repository setup: license, environment template, docs skeleton
-- [ ] E3 (Day 2): scaffold: uv project, pydantic models, test harness, docs/ARCHITECTURE.md
-- [ ] E4 (Day 3): provider adapters (Digi-Key, Mouser) with recorded fixtures, docs/PROVIDERS.md
-- [ ] E5 (Day 4): lookup: lifecycle normalization, MPN resolution, cache
-- [ ] E6 (Day 5): datasheet fetch and extraction with page citations, gold set
-- [ ] E7 (Day 6): docs/DOMAIN.md, package and pin tables, form and fit scoring
-- [ ] E8 (Day 7): function rules and the explainable diff
-- [ ] E9 (Day 8): candidate search, verify mode, CLI
-- [ ] E10 (Day 9): FastAPI API
-- [ ] E11 (Day 10): Ersatz-Bench dataset and docs/BENCHMARK_DESIGN.md
-- [ ] E12 (Day 11): benchmark harness and results
-- [ ] E13 (Day 12): web demo and landing page
-- [ ] E14 (Day 13): MCP server (stretch, skipped if time is short)
-- [ ] E15 (Day 14): README with benchmark results, docs pass, v0.1 tag
+- [ ] E3 (Day 1): domain spec: docs/DOMAIN.md, docs/BENCHMARK_DESIGN.md, decision entries, teach-back
+- [ ] E4 (Day 2): scaffold: uv project, pydantic models, test harness, docs/ARCHITECTURE.md
+- [ ] E5 (Day 3): provider adapters (Digi-Key, Mouser) with recorded fixtures, docs/PROVIDERS.md
+- [ ] E6 (Day 4): lookup: lifecycle normalization, MPN resolution, cache
+- [ ] E7 (Day 5): datasheet fetch and extraction with page citations, gold set
+- [ ] E8 (Day 6): package and pin tables, form and fit scoring
+- [ ] E9 (Day 7): function rules and the explainable diff
+- [ ] E10 (Day 8): candidate search, verify mode, CLI
+- [ ] E11 (Day 9): FastAPI API
+- [ ] E12 (Day 10): Ersatz-Bench dataset
+- [ ] E13 (Day 11): benchmark harness and results
+- [ ] E14 (Day 12): web demo and landing page
+- [ ] E15 (Day 13): README with benchmark results, docs pass, v0.1 tag
+- [ ] Stretch, after v0.1: MCP server
