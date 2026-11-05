@@ -28,3 +28,11 @@ A part qualifies for the dataset when all of the following hold on the snapshot 
 8. Public data only: every row carries the public notice URL. No row relies on material that is not publicly reachable.
 
 Each row stores: original MPN, manufacturer, category, replacement MPN or MPNs, relationship label, notice URL, notice date, last time buy date if stated, snapshot date, and a labeler note. Nothing else from any distributor response is stored.
+
+## Size (PROPOSED)
+
+Start at 50 rows (25 LDO, 25 op-amp). Target 200 rows (100 and 100).
+
+Reason: with n = 50 and an observed rate near 30 percent, a 95 percent Wilson interval is about plus or minus 12 points. With n = 200 it is about plus or minus 6 points. 50 rows is enough to show whether invented-part rates are near zero or clearly not. 200 rows is needed to separate models whose rates differ by less than 10 points.
+
+Runs are repeated measures of the same rows, so confidence intervals are computed over rows, not over runs. Per-row results across runs are combined by majority (see Metrics).
