@@ -36,3 +36,18 @@ Start at 50 rows (25 LDO, 25 op-amp). Target 200 rows (100 and 100).
 Reason: with n = 50 and an observed rate near 30 percent, a 95 percent Wilson interval is about plus or minus 12 points. With n = 200 it is about plus or minus 6 points. 50 rows is enough to show whether invented-part rates are near zero or clearly not. 200 rows is needed to separate models whose rates differ by less than 10 points.
 
 Runs are repeated measures of the same rows, so confidence intervals are computed over rows, not over runs. Per-row results across runs are combined by majority (see Metrics).
+
+## Labeling protocol (PROPOSED)
+
+Every ground truth pair carries two independent labels.
+
+Label A, relationship per the manufacturer, read from the notice text only:
+- drop_in: the manufacturer says drop-in, pin-to-pin, pin-compatible, or same pinout and function.
+- functional: the manufacturer says similar, alternative, functional equivalent, or lists a different package or pinout.
+- unspecified: the notice names a replacement with no relationship wording.
+
+The exact phrase that justified the label is stored with the row.
+
+Label B, relationship per Ersatz: the form and fit result from the pipeline (DROP_IN, SAME_PACKAGE_REWIRE, NO, UNKNOWN), produced once the pipeline exists. Label B never overwrites Label A. Disagreement between A and B is reported as its own number, because it measures both the manufacturer's wording and Ersatz.
+
+This is a single-labeler project. Consistency is measured by relabeling a random 20 percent of rows at least seven days after the first pass and reporting agreement. Rows whose label changes are read a third time, and the final label and reason are stored.
