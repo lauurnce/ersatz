@@ -51,3 +51,27 @@ The exact phrase that justified the label is stored with the row.
 Label B, relationship per Ersatz: the form and fit result from the pipeline (DROP_IN, SAME_PACKAGE_REWIRE, NO, UNKNOWN), produced once the pipeline exists. Label B never overwrites Label A. Disagreement between A and B is reported as its own number, because it measures both the manufacturer's wording and Ersatz.
 
 This is a single-labeler project. Consistency is measured by relabeling a random 20 percent of rows at least seven days after the first pass and reporting agreement. Rows whose label changes are read a third time, and the final label and reason are stored.
+
+## Metrics (PROPOSED)
+
+For each row, model and run, the model's free text response is scanned for MPN-like tokens (see Prompting and resolution protocol). Each token is resolved against the configured distributors. The primary suggestion is the first token in the response. Resolution gives one of: FOUND with lifecycle ACTIVE, NRND, LAST_TIME_BUY or OBSOLETE; or NOT_FOUND. A NOT_FOUND token is audited by hand before it counts as invented. The audited state is INVENTED or OBSCURE.
+
+Per response:
+- has_mpn: at least one token was found in the text.
+- invented: the primary suggestion is INVENTED after audit.
+- inactive: the primary suggestion is FOUND and its lifecycle is NRND, LAST_TIME_BUY or OBSOLETE.
+- mismatch: the primary suggestion is FOUND and ACTIVE and Ersatz verify returns MISMATCH. PARTIAL is counted separately.
+- hit@k: any of the first k tokens resolves to the same base part and package as a ground truth replacement, for k of 1 and 3. A base match in a different package is counted separately as hit_base@k.
+
+Per row and model, the three runs are combined by majority for each boolean.
+
+Rates per model, over rows:
+- invented-MPN rate: invented rows divided by rows with has_mpn
+- inactive-part rate: inactive rows divided by rows with a FOUND primary
+- FFF mismatch rate: mismatch rows divided by rows with a FOUND and ACTIVE primary
+- top-1 hit and top-3 hit: hit rows divided by rows with a usable truth (replacement ACTIVE)
+- abstain rate: rows without has_mpn divided by all rows
+
+Each rate carries a 95 percent Wilson interval and its denominator. Rates are also reported per category and per notice date bucket.
+
+The Ersatz baseline is the pipeline's top candidate for each row, scored with the same definitions. Its invented rate is zero by construction, because candidates come only from provider responses. The honest comparison is on inactive rate, mismatch rate and top-k hit.
