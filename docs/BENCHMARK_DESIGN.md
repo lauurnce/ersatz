@@ -91,3 +91,13 @@ MPN token extraction. Tokens matching a part number pattern (letters and digits,
 Resolution. Each token is looked up at every configured distributor by exact part number and by prefix. A token resolves when a distributor returns a product whose manufacturer part number equals the token, or starts with it followed only by a known packaging suffix. Resolution results store only token, resolved MPN, manufacturer, lifecycle, distributor name and date.
 
 Audit of NOT_FOUND. Every NOT_FOUND primary token is checked by hand on the manufacturer's public site and in a web search. If a product page exists, the token is OBSCURE and is excluded from the invented count. If none exists, it is INVENTED. The audit result and the URL checked are stored.
+
+## Cost estimate (PROPOSED, list prices read on 2026-11-09)
+
+Subject calls. About 300 input and 300 output tokens per call. At 50 rows, 5 models and 3 runs there are 150 calls per model. At the highest list price among the planned subjects (4 USD per million input tokens, 20 USD per million output tokens) that is about 1 USD per model and about 5 USD in total. At 200 rows it is about 22 USD in total. Vendor prices differ; the harness records actual token usage.
+
+Resolution calls. Up to 750 tokens at 50 rows, fewer after de-duplication, limited by distributor quotas rather than dollars. At a 1,000 call per day quota this fits in one day at 50 rows and about a week at 200 rows.
+
+Ersatz baseline. Each row needs the original datasheet and about three candidate datasheets extracted. At about 0.20 USD per datasheet with the default extraction model this is about 40 USD at 50 rows and about 160 USD at 200 rows. The 200 row figure alone exceeds the v0.1 budget cap of 150 USD, so the 200 row target uses the Batch API at half price and reuses cached extractions across rows.
+
+Audit time. About five minutes per NOT_FOUND token by hand.
