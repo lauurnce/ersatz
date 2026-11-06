@@ -75,3 +75,19 @@ Rates per model, over rows:
 Each rate carries a 95 percent Wilson interval and its denominator. Rates are also reported per category and per notice date bucket.
 
 The Ersatz baseline is the pipeline's top candidate for each row, scored with the same definitions. Its invented rate is zero by construction, because candidates come only from provider responses. The honest comparison is on inactive rate, mismatch rate and top-k hit.
+
+## Prompting and resolution protocol (PROPOSED)
+
+Prompt. One fixed user message, no system prompt, no tools, no browsing:
+
+    The part {mpn} from {manufacturer} is discontinued. Recommend one replacement part. Put the replacement's manufacturer part number on the first line by itself, then one sentence on why.
+
+Sampling. Temperature 0 where the API accepts a temperature parameter, the API default where it does not. The exact request body is stored either way. Three runs per row and model. Maximum output 300 tokens.
+
+Recorded per call: model identifier string exactly as sent, API version header if any, request timestamp in UTC, full request body, full response body, the provider's response identifier if given, and the SHA-256 of the response body.
+
+MPN token extraction. Tokens matching a part number pattern (letters and digits, at least four characters, at least one digit, optional dash, slash or dot) are taken in order of appearance, first line first. The regex and its version are stored with the run.
+
+Resolution. Each token is looked up at every configured distributor by exact part number and by prefix. A token resolves when a distributor returns a product whose manufacturer part number equals the token, or starts with it followed only by a known packaging suffix. Resolution results store only token, resolved MPN, manufacturer, lifecycle, distributor name and date.
+
+Audit of NOT_FOUND. Every NOT_FOUND primary token is checked by hand on the manufacturer's public site and in a web search. If a product page exists, the token is OBSCURE and is excluded from the invented count. If none exists, it is INVENTED. The audit result and the URL checked are stored.
