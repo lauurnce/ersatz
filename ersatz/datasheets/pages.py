@@ -76,7 +76,18 @@ _CATEGORY = {
 }
 
 
+# A table of contents names every section heading, so it would outscore the
+# pages that hold the values. Five or more dot-leader lines mark one.
+_TOC_LINE = re.compile(r"\.{5,}\s*\d+\s*$", re.MULTILINE)
+
+
+def is_contents(page: PageText) -> bool:
+    return len(_TOC_LINE.findall(page.text)) >= 5
+
+
 def score_page(page: PageText, category: Category) -> int:
+    if is_contents(page):
+        return 0
     text = page.text.lower()
     weights = {**_COMMON, **_CATEGORY[category]}
     return sum(weight for pattern, weight in weights.items() if re.search(pattern, text))

@@ -80,3 +80,11 @@ def test_revision_formats() -> None:
 
 def test_revision_unknown() -> None:
     assert find_revision([page(1, "DUAL OPERATIONAL AMPLIFIER")]) is None
+
+
+def test_table_of_contents_scores_zero() -> None:
+    lines = [f"5.{n} Electrical Characteristics: part {n}........{n + 5}" for n in range(6)]
+    toc = page(2, "\n".join(lines))
+    assert score_page(toc, Category.OPAMP) == 0
+    pins = page(3, "Pin Configuration and Functions")
+    assert select_pages([page(1, "front"), toc, pins], Category.OPAMP) == [1, 3]
