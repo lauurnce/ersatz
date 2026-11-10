@@ -444,12 +444,11 @@ pint defines "micro- = 1e-6 = μ- = µ- = u- = mu- = mc-", "ppm = 1e-6" and "per
 
 ### Validation rules
 
-Rule IDs appear in the issues list of every extracted value. A value that fails EXT-01 or EXT-10 is dropped. A value that fails any other rule is kept and marked LOW confidence; LOW never raises a value to HIGH and never counts toward VERIFIED.
+Rule IDs appear in the issues list of every extracted value. A value that fails EXT-01, EXT-10 or EXT-11 is dropped. A value that fails any other rule is kept and marked LOW confidence; LOW never raises a value to HIGH and never counts toward VERIFIED.
 
 | ID | Rule | Result if broken | Status |
 |---|---|---|---|
 | EXT-01 | Every value has a page and a quote; the quote is on that page and every reported number is in the quote | dropped | PROPOSED (D-021) |
-| EXT-01 | min <= typ <= max for every value | dropped | CITED convention [X19] |
 | EXT-02 | Each value lies inside a plausible window for its parameter (table below) | LOW | PROPOSED (D-033) |
 | EXT-03 | LDO: minimum input voltage >= output voltage + dropout, when the input minimum is above the output | LOW | CITED basis [R3] |
 | EXT-04 | LDO: output voltage < maximum recommended input voltage | LOW | PROPOSED |
@@ -459,6 +458,7 @@ Rule IDs appear in the issues list of every extracted value. A value that fails 
 | EXT-08 | Op-amp: supply min < supply max | LOW | PROPOSED |
 | EXT-09 | Pinout: every pin passed quote verification and maps to a pin function | LOW | PROPOSED |
 | EXT-10 | Units: the printed unit is an allowed spelling of the parameter's unit | dropped | PROPOSED |
+| EXT-11 | min <= typ <= max for every value | dropped | CITED convention [X19] |
 
 Cross-field rules run only when each parameter involved has exactly one extracted row; a datasheet that lists several output voltages skips them. Not yet checked: supply max <= absolute maximum and output swing within the rails, because v0.1 does not extract op-amp absolute maximum or output swing. Slew rate > 0 and GBW > 0 (CITED definitions [P2]) are covered by the EXT-02 windows.
 
