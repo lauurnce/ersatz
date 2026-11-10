@@ -56,7 +56,7 @@ select = ["E", "W", "F", "I", "B", "UP", "SIM", "RUF", "S", "PT"]
 
 [tool.mypy]
 python_version = "3.12"
-files = ["ersatz", "api", "tests"]
+files = ["ersatz", "api", "scripts", "tests"]
 plugins = ["pydantic.mypy"]
 warn_unused_configs = true
 warn_redundant_casts = true
