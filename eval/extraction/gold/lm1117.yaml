@@ -1,0 +1,29 @@
+# Ground truth for one datasheet. Values are in Ersatz canonical units
+# (V, A, Hz, V/s, F, ohm, percent, dB, degC). Labels were drafted by hand
+# from the PDF; status stays DRAFT until spot-checked.
+id: lm1117
+category: ldo
+device: LM1117
+manufacturer: Texas Instruments
+url: https://www.ti.com/lit/ds/symlink/lm1117.pdf
+sha256: c117f5dd97fd15e62c0dee3adbf1af60480a128a10a0f9a9c28aafb8220ec3aa
+revision: SNOS412Q
+status: DRAFT
+labels:
+  - {kind: parameter, name: vin, max: 15, pages: [3, 4], note: "Recommended operating conditions, input voltage 15 V max"}
+  - {kind: parameter, name: vin_abs_max, max: 20, pages: [4], note: "Absolute maximum, maximum input voltage 20 V"}
+  - {kind: parameter, name: vref, min: 1.238, typ: 1.25, max: 1.262, pages: [5], note: "LM1117-ADJ, IOUT = 10 mA, TJ = 25 C"}
+  - {kind: parameter, name: vout, min: 3.267, typ: 3.3, max: 3.333, pages: [5], note: "LM1117-3.3, IOUT = 10 mA, VIN = 5 V, TJ = 25 C"}
+  - {kind: parameter, name: iout, max: 0.8, pages: [1], note: "Features, output current 800 mA"}
+  - {kind: parameter, name: dropout, typ: 1.2, max: 1.3, pages: [6], note: "IOUT = 800 mA; max over 0 C to 125 C"}
+  - {kind: parameter, name: iq, typ: 0.005, max: 0.010, pages: [6], note: "Quiescent current, LM1117-3.3, VIN <= 15 V"}
+  - {kind: parameter, name: psrr, min: 60, typ: 75, pages: [6], note: "Ripple regulation, f = 120 Hz, VIN - VOUT = 3 V"}
+  - {kind: parameter, name: cout_min, min: 10.0e-6, pages: [1, 15], note: "10 uF tantalum minimum"}
+  - {kind: parameter, name: cout_esr, min: 0.3, max: 22, pages: [15], note: "ESR should range between 0.3 to 22 ohm"}
+  - {kind: package, name: SOT-223, pin_count: 4, pages: [1, 3]}
+  - {kind: package, name: TO-252, pin_count: 3, pages: [1, 3]}
+  - {kind: package, name: WSON, pin_count: 8, pages: [1, 3]}
+  - {kind: pin, package: SOT-223, number: "2", function: OUT, pages: [3]}
+  - {kind: pin, package: SOT-223, number: "3", function: IN, pages: [3]}
+  - {kind: pin, package: SOT-223, number: TAB, function: OUT, pages: [3]}
+  - {kind: feature, name: adjustable_output, value: true, pages: [1]}

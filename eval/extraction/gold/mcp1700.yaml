@@ -1,0 +1,25 @@
+id: mcp1700
+category: ldo
+device: MCP1700
+manufacturer: Microchip Technology
+url: https://ww1.microchip.com/downloads/en/DeviceDoc/MCP1700-Low-Quiescent-Current-LDO-20001826E.pdf
+sha256: 808bac85cf4d3fea97938d2d4ea5f3384d26e1f0dd8e3191ad2d5dae3ed18ee4
+revision: DS20001826E
+status: DRAFT
+labels:
+  - {kind: parameter, name: vin, min: 2.3, max: 6.0, pages: [1, 3], note: "Input operating voltage 2.3 to 6.0 V"}
+  - {kind: parameter, name: vin_abs_max, max: 6.5, pages: [3], note: "Absolute maximum VDD +6.5 V"}
+  - {kind: parameter, name: iout, min: 0.25, pages: [1, 3], note: "Maximum output current 250 mA in the Min column, for VR >= 2.5 V"}
+  - {kind: parameter, name: dropout, typ: 0.178, max: 0.35, pages: [1, 3], note: "IL = 250 mA, VR >= 2.5 V"}
+  - {kind: parameter, name: iq, typ: 1.6e-6, max: 4.0e-6, pages: [1, 3], note: "IL = 0 mA"}
+  - {kind: parameter, name: psrr, typ: 44, pages: [4], note: "f = 100 Hz, IL = 50 mA"}
+  - {kind: parameter, name: tj, min: -40, max: 125, pages: [1, 3, 4], note: "Operating junction temperature"}
+  - {kind: parameter, name: cout_min, min: 1.0e-6, pages: [1], note: "Stable with 1.0 uF ceramic output capacitor"}
+  - {kind: package, name: SOT-23, pin_count: 3, pages: [1, 11]}
+  - {kind: package, name: SOT-89, pin_count: 3, pages: [1, 11]}
+  - {kind: package, name: TO-92, pin_count: 3, pages: [1, 11]}
+  - {kind: package, name: DFN-6, pin_count: 6, pages: [1, 11]}
+  - {kind: pin, package: SOT-23, number: "1", function: GND, pages: [1, 11]}
+  - {kind: pin, package: SOT-23, number: "2", function: OUT, pages: [1, 11]}
+  - {kind: pin, package: SOT-23, number: "3", function: IN, pages: [1, 11]}
+  - {kind: feature, name: ceramic_cap_stable, value: true, pages: [1]}

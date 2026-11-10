@@ -1,0 +1,28 @@
+id: ap2112
+category: ldo
+device: AP2112-3.3
+manufacturer: Diodes Incorporated
+url: https://www.diodes.com/assets/Datasheets/AP2112.pdf
+sha256: ef8d376f2ec356e29172eb9e053819a0ebdcc576dba7fc9ab0505c568427920f
+revision: DS39724 Rev. 2 - 2
+status: DRAFT
+labels:
+  - {kind: parameter, name: vin, min: 2.5, max: 6.0, pages: [3], note: "Recommended operating conditions, supply voltage"}
+  - {kind: parameter, name: vin_abs_max, max: 6.5, pages: [3], note: "Absolute maximum, power supply voltage"}
+  - {kind: parameter, name: vout, typ: 3.3, pages: [8], note: "AP2112-3.3, VIN = 4.3 V, 1 mA <= IOUT <= 30 mA"}
+  - {kind: parameter, name: iout, min: 0.6, pages: [1, 8], note: "Maximum output current 600 mA in the Min column"}
+  - {kind: parameter, name: dropout, typ: 0.25, max: 0.4, pages: [8], note: "AP2112-3.3, IOUT = 600 mA"}
+  - {kind: parameter, name: iq, typ: 55.0e-6, max: 80.0e-6, pages: [1, 4, 5, 6, 7, 8], note: "IOUT = 0 mA"}
+  - {kind: parameter, name: ishdn, typ: 0.01e-6, max: 1.0e-6, pages: [1, 4, 5, 6, 7, 8], note: "Standby current, EN off"}
+  - {kind: parameter, name: psrr, typ: 65, pages: [1, 4, 5, 6, 7, 8], note: "f = 100 Hz, IOUT = 100 mA"}
+  - {kind: parameter, name: cout_min, min: 1.0e-6, pages: [1], note: "Stable with 1.0 uF flexible cap"}
+  - {kind: package, name: SOT25, pin_count: 5, pages: [1, 2]}
+  - {kind: package, name: SOT89-5, pin_count: 5, pages: [1, 2]}
+  - {kind: package, name: SO-8, pin_count: 8, pages: [1, 2]}
+  - {kind: pin, package: SOT25, number: "1", function: IN, pages: [1, 2]}
+  - {kind: pin, package: SOT25, number: "2", function: GND, pages: [1, 2]}
+  - {kind: pin, package: SOT25, number: "3", function: EN, pages: [1, 2]}
+  - {kind: pin, package: SOT25, number: "4", function: NC, pages: [1, 2]}
+  - {kind: pin, package: SOT25, number: "5", function: OUT, pages: [1, 2]}
+  - {kind: feature, name: enable_pin, value: true, pages: [1, 2]}
+  - {kind: feature, name: ceramic_cap_stable, value: true, pages: [1]}
