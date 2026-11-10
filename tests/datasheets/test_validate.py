@@ -175,3 +175,10 @@ def test_packages_get_a_group_and_features_a_source() -> None:
     assert ex.packages[0].group is not None
     assert ex.packages[0].source.page == 1
     assert ex.features[0].source.page == 2
+
+
+def test_negative_bias_current_keeps_its_magnitude() -> None:
+    ex = run(Category.OPAMP, raw("ibias", "nA", typ="-20", max="-250"))
+    p = only(ex, ParamName.IBIAS).parameter
+    assert (p.typ, p.max) == (pytest.approx(2e-8), pytest.approx(2.5e-7))
+    assert p.conditions["direction"] == "out of the input pins"

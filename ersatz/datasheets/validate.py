@@ -143,6 +143,11 @@ def _parse(raw: RawParameter) -> tuple[float | None, float | None, float | None,
             continue
         value = next(v for v in (parsed.min, parsed.typ, parsed.max) if v is not None)
         slots[slot] = value
+    present = [v for v in slots.values() if v is not None]
+    if name is ParamName.IBIAS and present and all(v < 0 for v in present):
+        # A negative sign gives the current direction; rules compare magnitude.
+        slots = {k: (abs(v) if v is not None else None) for k, v in slots.items()}
+        conditions["direction"] = "out of the input pins"
     if conditions.get("supply") == "split" and name is ParamName.VSUPPLY:
         slots = {k: (2 * v if v is not None else None) for k, v in slots.items()}
         conditions["supply"] = "split, converted to total span"
