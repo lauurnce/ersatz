@@ -444,19 +444,46 @@ pint defines "micro- = 1e-6 = μ- = µ- = u- = mu- = mc-", "ppm = 1e-6" and "per
 
 ### Validation rules
 
-| Rule | Status |
-|---|---|
-| min <= typ <= max for every value | CITED convention [X19] |
-| Every value has a page and a verified quote | PROPOSED |
-| LDO: minimum input voltage >= output voltage + dropout | CITED basis [R3] |
-| LDO: output voltage < maximum recommended input voltage | PROPOSED |
-| LDO: 0 < dropout < output voltage; dropout has a current condition | PROPOSED, basis [R4] |
-| LDO: quiescent current < rated output current; shutdown current <= quiescent current | PROPOSED |
-| LDO: accuracy magnitude <= 10 percent | PROPOSED |
-| Op-amp: slew rate > 0, GBW > 0 | CITED definitions [P2] |
-| Op-amp: supply min < supply max <= absolute maximum | PROPOSED |
-| Op-amp: output swing within the supply rails | PROPOSED |
-| Units: parsed dimension matches the parameter's dimension | PROPOSED |
+Rule IDs appear in the issues list of every extracted value. A value that fails EXT-01 or EXT-10 is dropped. A value that fails any other rule is kept and marked LOW confidence; LOW never raises a value to HIGH and never counts toward VERIFIED.
+
+| ID | Rule | Result if broken | Status |
+|---|---|---|---|
+| EXT-01 | Every value has a page and a quote; the quote is on that page and every reported number is in the quote | dropped | PROPOSED (D-021) |
+| EXT-01 | min <= typ <= max for every value | dropped | CITED convention [X19] |
+| EXT-02 | Each value lies inside a plausible window for its parameter (table below) | LOW | PROPOSED (D-033) |
+| EXT-03 | LDO: minimum input voltage >= output voltage + dropout, when the input minimum is above the output | LOW | CITED basis [R3] |
+| EXT-04 | LDO: output voltage < maximum recommended input voltage | LOW | PROPOSED |
+| EXT-05 | LDO: 0 < dropout < output voltage; dropout has an output current condition | LOW | PROPOSED, basis [R4] |
+| EXT-06 | LDO: quiescent current < rated output current; shutdown current <= quiescent current | LOW | PROPOSED |
+| EXT-07 | LDO: accuracy magnitude <= 10 percent (enforced through the EXT-02 window) | LOW | PROPOSED |
+| EXT-08 | Op-amp: supply min < supply max | LOW | PROPOSED |
+| EXT-09 | Pinout: every pin passed quote verification and maps to a pin function | LOW | PROPOSED |
+| EXT-10 | Units: the printed unit is an allowed spelling of the parameter's unit | dropped | PROPOSED |
+
+Cross-field rules run only when each parameter involved has exactly one extracted row; a datasheet that lists several output voltages skips them. Not yet checked: supply max <= absolute maximum and output swing within the rails, because v0.1 does not extract op-amp absolute maximum or output swing. Slew rate > 0 and GBW > 0 (CITED definitions [P2]) are covered by the EXT-02 windows.
+
+Sign conventions handled before the rules run (PROPOSED): a tolerance printed as plus or minus is stored as its magnitude in the printed column; a split supply such as "±2.5 V to ±18 V" is stored as a total span; an input bias current printed only with negative values is stored as a magnitude with its direction in the conditions.
+
+Plausible windows for EXT-02, in canonical units and compared on magnitude (temperature is compared signed). They are sanity bounds for v0.1 LDOs and op-amps, not limits taken from a source:
+
+| Parameter | Window | Parameter | Window |
+|---|---|---|---|
+| vin | 0.5 to 100 V | channels | 1 to 4 |
+| vin_abs_max | 1 to 120 V | vsupply | 0.5 to 60 V |
+| vout | 0.5 to 60 V | gbw | 1 kHz to 10 GHz |
+| vref | 0.2 to 5 V | slew_rate | 1e3 to 1e10 V/s |
+| vout_accuracy | 0 to 10 percent | vos | 0 to 0.1 V |
+| iout | 1 mA to 10 A | ibias | 0 to 10 uA |
+| dropout | 0 to 5 V | vnoise | 0.1 nV to 10 uV per root Hz |
+| iq | 0 to 50 mA | iq_per_channel | 0 to 50 mA |
+| ishdn | 0 to 1 mA | min_stable_gain | 1 to 100 |
+| psrr | 0 to 120 dB | tj | -65 to 200 degC |
+| cout_min | 0 to 1 mF | cout_esr | 0 to 100 ohm |
+
+Text layer findings from the gold set (CITED by observation of the PDFs listed in eval/extraction/gold/):
+- TI tables put a value and its condition on separate lines, and rotated header text appears as scattered letters. A verbatim quote then spans several lines; whitespace is collapsed before matching.
+- One Microchip datasheet draws comparison signs with a symbol font, so the text layer holds private-use code points. They are ignored when quotes are matched.
+- A table of contents names every section heading and would outscore the pages that hold values. Pages with five or more dot-leader lines are skipped during page selection.
 
 ### Sources
 
