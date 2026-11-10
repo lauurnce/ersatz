@@ -1,0 +1,28 @@
+id: njm4558
+category: opamp
+device: NJM4558
+manufacturer: Nisshinbo Micro Devices
+url: https://www.nisshinbo-microdevices.co.jp/en/pdf/datasheet/NJM4558_E.pdf
+sha256: 9d73cf4cc7b5fa8c9fac83c0f5bd58e8571e7076fca57456a2b689cb5c39acbe
+revision: null
+status: DRAFT
+labels:
+  - {kind: parameter, name: vsupply, min: 8, max: 36, pages: [1], note: "Operating voltage +-4 V to +-18 V, as total span"}
+  - {kind: parameter, name: channels, typ: 2, any_slot: true, pages: [1], note: "Dual operational amplifier"}
+  - {kind: parameter, name: vos, typ: 0.5e-3, max: 6.0e-3, pages: [2], note: "RS <= 10 kohm, +-15 V, 25 C"}
+  - {kind: parameter, name: ibias, typ: 25.0e-9, max: 500.0e-9, pages: [2]}
+  - {kind: parameter, name: slew_rate, typ: 1.0e6, pages: [2], note: "1 V/us"}
+  - {kind: parameter, name: gbw, typ: 3.0e6, pages: [2], note: "3 MHz"}
+  - {kind: parameter, name: iq, typ: 3.5e-3, max: 5.7e-3, pages: [2], note: "Operating current, whole package"}
+  - {kind: parameter, name: tj, min: -40, max: 85, pages: [2], note: "Operating temperature range (ambient)"}
+  - {kind: package, name: DMP8, pin_count: 8, pages: [1]}
+  - {kind: package, name: SSOP8, pin_count: 8, pages: [1]}
+  - {kind: package, name: SOP8, pin_count: 8, pages: [1]}
+  - {kind: pin, package: [DMP8, SOP8, SSOP8, NJM4558M], number: "1", function: OUT, pages: [1]}
+  - {kind: pin, package: [DMP8, SOP8, SSOP8, NJM4558M], number: "2", function: INN, pages: [1]}
+  - {kind: pin, package: [DMP8, SOP8, SSOP8, NJM4558M], number: "3", function: INP, pages: [1]}
+  - {kind: pin, package: [DMP8, SOP8, SSOP8, NJM4558M], number: "4", function: VEE, pages: [1]}
+  - {kind: pin, package: [DMP8, SOP8, SSOP8, NJM4558M], number: "5", function: INP, pages: [1]}
+  - {kind: pin, package: [DMP8, SOP8, SSOP8, NJM4558M], number: "6", function: INN, pages: [1]}
+  - {kind: pin, package: [DMP8, SOP8, SSOP8, NJM4558M], number: "7", function: OUT, pages: [1]}
+  - {kind: pin, package: [DMP8, SOP8, SSOP8, NJM4558M], number: "8", function: VCC, pages: [1]}

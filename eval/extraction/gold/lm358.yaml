@@ -1,0 +1,29 @@
+id: lm358
+category: opamp
+device: LM358
+manufacturer: Texas Instruments
+url: https://www.ti.com/lit/ds/symlink/lm358.pdf
+sha256: 8277dff7b89138c63b3582d37f378065a1dea3cae5ed1e2926ddc2779eb7e3a2
+revision: SLOS068AB
+status: DRAFT
+labels:
+  - {kind: parameter, name: vsupply, min: 3, max: 30, pages: [1, 5], note: "Recommended operating supply voltage for LM358"}
+  - {kind: parameter, name: channels, typ: 2, any_slot: true, pages: [1], note: "Industry-standard dual operational amplifiers"}
+  - {kind: parameter, name: vos, typ: 3.0e-3, max: 7.0e-3, pages: [10], note: "LM358, VS = 5 V to 30 V, 25 C"}
+  - {kind: parameter, name: ibias, typ: 20.0e-9, max: 250.0e-9, pages: [10], note: "Printed as -20 and -250 nA (current direction)"}
+  - {kind: parameter, name: gbw, typ: 0.7e6, pages: [1, 10], note: "0.7 MHz"}
+  - {kind: parameter, name: slew_rate, typ: 0.3e6, pages: [10], note: "0.3 V/us, G = +1"}
+  - {kind: parameter, name: vnoise, typ: 40.0e-9, pages: [10], note: "f = 1 kHz"}
+  - {kind: parameter, name: iq_per_channel, alt_names: [iq], typ: 350.0e-6, max: 600.0e-6, pages: [1, 10], note: "VO = 2.5 V, IO = 0 A, per amplifier"}
+  - {kind: parameter, name: tj, min: 0, max: 70, pages: [5], note: "Operating ambient temperature for LM358"}
+  - {kind: package, name: SOIC, pin_count: 8, pages: [1, 3]}
+  - {kind: package, name: VSSOP, pin_count: 8, pages: [1, 3]}
+  - {kind: package, name: PDIP, pin_count: 8, pages: [1, 3]}
+  - {kind: pin, package: [SOIC, VSSOP, PDIP], number: "1", function: OUT, pages: [3]}
+  - {kind: pin, package: [SOIC, VSSOP, PDIP], number: "2", function: INN, pages: [3]}
+  - {kind: pin, package: [SOIC, VSSOP, PDIP], number: "3", function: INP, pages: [3]}
+  - {kind: pin, package: [SOIC, VSSOP, PDIP], number: "4", function: VEE, pages: [3]}
+  - {kind: pin, package: [SOIC, VSSOP, PDIP], number: "5", function: INP, pages: [3]}
+  - {kind: pin, package: [SOIC, VSSOP, PDIP], number: "6", function: INN, pages: [3]}
+  - {kind: pin, package: [SOIC, VSSOP, PDIP], number: "7", function: OUT, pages: [3]}
+  - {kind: pin, package: [SOIC, VSSOP, PDIP], number: "8", function: VCC, pages: [3]}

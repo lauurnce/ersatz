@@ -1,0 +1,31 @@
+id: njm2732
+category: opamp
+device: NJM2732
+manufacturer: Nisshinbo Micro Devices
+url: https://www.nisshinbo-microdevices.co.jp/en/pdf/datasheet/NJM2732_E.pdf
+sha256: 8809db187cb468a7b6ef1def55c2754d1a0552678a19de35f0ddad972dfb0333
+revision: null
+status: DRAFT
+labels:
+  - {kind: parameter, name: vsupply, min: 1.8, max: 6.0, pages: [1, 2], note: "Operating voltage 1.8 to 6.0 V"}
+  - {kind: parameter, name: channels, typ: 2, any_slot: true, pages: [1], note: "Dual operational amplifier"}
+  - {kind: parameter, name: vos, typ: 1.0e-3, max: 5.0e-3, pages: [1, 2, 3], note: "V+ = 5 V or 3 V, 25 C"}
+  - {kind: parameter, name: ibias, typ: 50.0e-9, max: 250.0e-9, pages: [2, 3]}
+  - {kind: parameter, name: slew_rate, typ: 0.4e6, pages: [1, 2], note: "V+ = 5 V, RL = 2 kohm"}
+  - {kind: parameter, name: gbw, typ: 1.0e6, pages: [2, 3], note: "Unity gain bandwidth 1 MHz"}
+  - {kind: parameter, name: vnoise, typ: 10.0e-9, pages: [1, 2, 3], note: "f = 1 kHz"}
+  - {kind: parameter, name: iq, typ: 580.0e-6, max: 900.0e-6, pages: [2], note: "Operating current at V+ = 5 V"}
+  - {kind: parameter, name: tj, min: -40, max: 85, pages: [2], note: "Operating temperature range (ambient)"}
+  - {kind: package, name: DMP8, pin_count: 8, pages: [1]}
+  - {kind: package, name: EMP8, pin_count: 8, pages: [1]}
+  - {kind: package, name: SSOP8, pin_count: 8, pages: [1]}
+  - {kind: pin, package: [DMP8, EMP8, SSOP8, NJM2732D, DIP8], number: "1", function: OUT, pages: [1]}
+  - {kind: pin, package: [DMP8, EMP8, SSOP8, NJM2732D, DIP8], number: "2", function: INN, pages: [1]}
+  - {kind: pin, package: [DMP8, EMP8, SSOP8, NJM2732D, DIP8], number: "3", function: INP, pages: [1]}
+  - {kind: pin, package: [DMP8, EMP8, SSOP8, NJM2732D, DIP8], number: "4", function: VEE, pages: [1]}
+  - {kind: pin, package: [DMP8, EMP8, SSOP8, NJM2732D, DIP8], number: "5", function: INP, pages: [1]}
+  - {kind: pin, package: [DMP8, EMP8, SSOP8, NJM2732D, DIP8], number: "6", function: INN, pages: [1]}
+  - {kind: pin, package: [DMP8, EMP8, SSOP8, NJM2732D, DIP8], number: "7", function: OUT, pages: [1]}
+  - {kind: pin, package: [DMP8, EMP8, SSOP8, NJM2732D, DIP8], number: "8", function: VCC, pages: [1]}
+  - {kind: feature, name: rail_to_rail_input, value: true, pages: [1]}
+  - {kind: feature, name: rail_to_rail_output, value: true, pages: [1]}

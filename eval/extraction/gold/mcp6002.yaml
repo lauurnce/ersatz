@@ -1,0 +1,27 @@
+id: mcp6002
+category: opamp
+device: MCP6002
+manufacturer: Microchip Technology
+url: https://ww1.microchip.com/downloads/en/DeviceDoc/MCP6001-1R-1U-2-4-1-MHz-Low-Power-Op-Amp-DS20001733L.pdf
+sha256: 4f879ab31115ecfa149dfea62073c9efdbc4beccbdfc3a8d7e10281f3877f8fb
+revision: DS20001733L
+status: DRAFT
+labels:
+  - {kind: parameter, name: vsupply, min: 1.8, max: 6.0, pages: [1, 3], note: "Supply voltage 1.8 V to 6.0 V"}
+  - {kind: parameter, name: vos, max: 4.5e-3, pages: [3], note: "Min -4.5 mV, max +4.5 mV"}
+  - {kind: parameter, name: ibias, typ: 1.0e-12, pages: [3], note: "+-1.0 pA typical at 25 C"}
+  - {kind: parameter, name: gbw, typ: 1.0e6, pages: [1, 4], note: "1 MHz"}
+  - {kind: parameter, name: slew_rate, typ: 0.6e6, pages: [4], note: "0.6 V/us"}
+  - {kind: parameter, name: vnoise, typ: 28.0e-9, pages: [4], note: "f = 1 kHz"}
+  - {kind: parameter, name: iq_per_channel, alt_names: [iq], min: 50.0e-6, typ: 100.0e-6, max: 170.0e-6, pages: [3], note: "Quiescent current per amplifier"}
+  - {kind: parameter, name: tj, min: -40, max: 125, pages: [1, 4], note: "Operating temperature range"}
+  - {kind: package, name: SOIC, pin_count: 8, pages: [1]}
+  - {kind: package, name: MSOP, pin_count: 8, pages: [1]}
+  - {kind: package, name: PDIP, pin_count: 8, pages: [1]}
+  - {kind: pin, package: [SOIC, MSOP, PDIP, MCP6002], number: "1", function: OUT, pages: [1]}
+  - {kind: pin, package: [SOIC, MSOP, PDIP, MCP6002], number: "2", function: INN, pages: [1]}
+  - {kind: pin, package: [SOIC, MSOP, PDIP, MCP6002], number: "3", function: INP, pages: [1]}
+  - {kind: pin, package: [SOIC, MSOP, PDIP, MCP6002], number: "4", function: VEE, pages: [1]}
+  - {kind: pin, package: [SOIC, MSOP, PDIP, MCP6002], number: "8", function: VCC, pages: [1]}
+  - {kind: feature, name: rail_to_rail_input, value: true, pages: [1]}
+  - {kind: feature, name: rail_to_rail_output, value: true, pages: [1]}
