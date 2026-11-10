@@ -1,0 +1,18 @@
+{
+  "synthetic": true,
+  "device": "TEST-OPA2",
+  "pages": [
+    {
+      "page": 1,
+      "text": "TEST-OPA2\nTESTDOC9B - MARCH 2026 - REVISED JUNE 2026\nTEST-OPA2 Dual, 1-MHz, Rail-to-Rail Output Operational Amplifier\n1 Features\n- Rail-to-rail output\n- Unity-gain stable\n- Supply range: 1.8 V to 5.5 V\n2 Device Information\nTEST-OPA2 SOIC (8) 4.90 mm x 3.91 mm"
+    },
+    {
+      "page": 3,
+      "text": "5 Pin Configuration and Functions\nD Package 8-Pin SOIC Top View\nPin Functions\nNO. NAME I/O DESCRIPTION\n1 OUTA O Output, channel A\n2 -INA I Inverting input, channel A\n3 +INA I Noninverting input, channel A\n4 V- - Negative supply\n5 +INB I Noninverting input, channel B\n6 -INB I Inverting input, channel B\n7 OUTB O Output, channel B\n8 V+ - Positive supply"
+    },
+    {
+      "page": 5,
+      "text": "6.5 Electrical Characteristics\nVS = 5 V, TA = 25 C (unless otherwise noted)\nPARAMETER TEST CONDITIONS MIN TYP MAX UNIT\nVOS Input offset voltage VCM = VS / 2 0.5 4.5 mV\nIB Input bias current 1 10 pA\nGBW Gain-bandwidth product CL = 100 pF 1 MHz\nSR Slew rate G = +1 0.6 V/us\nIQ Quiescent current per amplifier IO = 0 mA 100 150 uA"
+    }
+  ]
+}
