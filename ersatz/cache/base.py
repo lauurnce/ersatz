@@ -13,6 +13,7 @@ class DataKind(StrEnum):
     DATASHEET_FILE = "datasheet_file"
     EXTRACTION = "extraction"
     BUDGET = "budget"
+    LLM_SPEND = "llm_spend"
 
 
 # None means the entry never expires. Provider data uses the shortest provider
@@ -23,6 +24,7 @@ DEFAULT_TTL: dict[DataKind, timedelta | None] = {
     DataKind.DATASHEET_FILE: None,
     DataKind.EXTRACTION: None,
     DataKind.BUDGET: timedelta(days=2),
+    DataKind.LLM_SPEND: None,
 }
 
 
