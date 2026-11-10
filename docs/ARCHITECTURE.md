@@ -211,16 +211,27 @@ Exact match on the provider's MPN string, or the MPN plus a packaging suffix lis
 ### ersatz.datasheets
 
 ```python
-def fetch(url: str, cache: Cache) -> DatasheetFile                    # path, sha256, url, fetched_at
-def page_texts(file: DatasheetFile) -> list[PageText]                 # pdfplumber, per page
-def select_pages(pages: list[PageText], category: Category) -> list[int]
-def extract(file: DatasheetFile, pages: list[int], category: Category, llm: LLMClient) -> RawExtraction
-def verify_quotes(raw: RawExtraction, pages: list[PageText]) -> Extraction   # drops unverified values
-def validate(ex: Extraction, category: Category) -> list[ValidationIssue]
-
-class LLMClient(Protocol):
-    def extract_structured(self, pdf_pages: bytes, schema: type[BaseModel], prompt: str) -> LLMResult: ...
+def fetch(url: str, cache: Cache, cache_dir: Path) -> DatasheetFile      # url, sha256, path, size, fetched_at
+def page_texts(path: Path) -> list[PageText]                              # pdfplumber, 1-indexed
+def select_pages(pages: list[PageText], category: Category) -> list[int]  # keyword scores, skips contents pages
+def run_extraction(pages, selected, category, device, llm, ledger) -> tuple[RawExtraction, ExtractionRun]
+def verify_quotes(raw: RawExtraction, pages, category, sent) -> VerifiedExtraction   # drops unverified values
+def validate(verified: VerifiedExtraction, category, ref: DatasheetRef) -> Extraction  # units, EXT rules, confidence
+def extract_datasheet(file, category, llm, ledger, cache, device) -> ExtractionResult  # all of the above, cached
 ```
+
+The schema (schema.py) and prompt (prompt.py) carry their own version numbers. The cache key for a model reply is file SHA-256, category, target device and `model/sSCHEMA/pPROMPT`, so a change to either forces a new call while verification and validation always run again. Pages are sent as text (D-031). The evaluation lives in scoring.py and report.py and runs through scripts/eval_extraction.py against eval/extraction/gold/ (D-032).
+
+### ersatz.llm
+
+```python
+class LLMClient(Protocol):
+    provider: str
+    model: str
+    def complete_json(self, system: str, user: str, schema: dict, max_tokens: int) -> LLMResult: ...
+```
+
+AnthropicClient uses structured outputs (output_config.format) with explicit effort and streaming. make_llm(settings) builds the client named by ERSATZ_LLM_PROVIDER and ERSATZ_LLM_MODEL. Every call goes through ersatz.budget.SpendLedger, which refuses a call whose worst case (estimated input plus max_tokens of output) could cross the run cap or the 150 USD total cap, and records the real cost afterwards.
 
 ### ersatz.match
 
