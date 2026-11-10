@@ -211,3 +211,31 @@ Date: 2026-11-09
 Decision: parse_value returns min, typ and max in SI base units with conditions keyed by quantity (I, V, f, T). It rejects text it cannot read in full: a value with a trailing tolerance such as "1.25 V ±1%", a backwards range, conflicting qualifiers, a bare number for a dimensional parameter, and any unit spelling outside a per-unit allow-list. package_group matches comma-separated provider names as alternatives and returns UNKNOWN with a reason for unknown, ambiguous, conflicting and no-lead names, and for a pin count or body width that does not fit the group. Unparsed provider strings stay on the Part verbatim with their source.
 Reason: a wrong value or footprint produces a wrong verdict, while UNKNOWN only lowers it to PARTIAL (D-017). Case matters in units ("MV" is megavolt), so spellings are allow-listed before pint sees them (DOMAIN.md section 6).
 Alternatives considered: fuzzy package matching (would guess between groups such as SOT23-5 and SOT23-6), reading tolerance as a range around the value (correct for some datasheets, wrong for others), passing raw strings to pint (accepts megavolt and years).
+
+## D-031 Send page text, not page images
+
+Date: 2026-11-10
+Decision: extraction sends the pdfplumber text of the selected pages, each under a "=== PAGE n ===" marker, instead of PDF pages or images. The model sees exactly the text that quote verification later reads. The client interface takes a system prompt, a user message and a JSON schema, so any provider with structured outputs fits. This refines the LLMClient sketch in docs/ARCHITECTURE.md, which took PDF bytes.
+Reason: a quote copied from the same text can be checked character for character after whitespace collapsing. Text costs a few thousand tokens per page less than a page image. Tables whose values sit on separate lines from their conditions remain hard; the gold set measures how hard.
+Alternatives considered: PDF document input (quotes would come from the model's own reading of the page and often fail to match the text layer; higher cost), page images plus text (double cost for a gain the evaluation has not shown yet).
+
+## D-032 Extraction gold set v1
+
+Date: 2026-11-10
+Decision: ten datasheets, five LDOs and five op-amps, from Texas Instruments, Microchip, Diodes, ROHM and Nisshinbo, labeled by hand in eval/extraction/gold/ with page references and DRAFT status until three labels are spot-checked (docs/EXTRACTION_REVIEW.md). Labels cover parameters, packages, pins and features, 188 in total. PDFs are referenced by URL and SHA-256 and never committed. Field accuracy and citation accuracy are reported per field type in docs/EXTRACTION_EVAL.md, failures included. A value matches within 1 percent.
+Reason: the prompt for this phase asked for ten datasheets. Two vendors whose sites refused automated downloads were replaced rather than worked around. The architecture planned 15 per category; that size is kept as the target for a later gold set.
+Alternatives considered: labels taken from distributor parametric data (not the datasheet, and not citable to a page), a larger set before the first run (labeling cost before the format was tested).
+
+## D-033 Drop or mark LOW, never repair
+
+Date: 2026-11-10
+Decision: after quote verification, a value whose unit does not parse or whose columns are out of order is dropped. A value that breaks a plausibility window or a cross-field rule is kept and marked LOW confidence with the rule ID. Validation never changes a number to make a rule pass. The only rewrites are the sign conventions listed in docs/DOMAIN.md section 6.
+Reason: a dropped value becomes UNKNOWN downstream, which is safe. A LOW value stays visible to the engineer with its reason. A repaired value would be an invented one.
+Alternatives considered: dropping every LOW value (loses correct values on multi-variant datasheets where a rule misfires), a numeric confidence score (no calibration data yet).
+
+## D-034 Synthetic datasheet page text in tests
+
+Date: 2026-11-10
+Decision: tests use small PDFs generated in the suite and synthetic page text stored under tests/fixtures/datasheets/, with TEST- part numbers and invented values. Real datasheet text stays in the local cache. The live run uses the real PDFs.
+Reason: same reasoning as D-019. Datasheet text is the manufacturer's copyrighted material and does not belong in a public repository.
+Alternatives considered: trimmed excerpts of real datasheets (redistribution), no stored text (tests would miss the layout of real tables).
