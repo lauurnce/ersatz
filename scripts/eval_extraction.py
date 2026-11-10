@@ -117,7 +117,11 @@ def main(argv: list[str] | None = None) -> int:
     settings = get_settings()
     cache = SqliteCache(settings.ersatz_cache_dir / "ersatz.sqlite")
     gold = [g for g in load_gold(args.gold_dir) if not args.only or g.id in args.only]
-    llm = make_llm(settings)
+    try:
+        llm = make_llm(settings)
+    except LLMError as exc:
+        print(f"cannot run the evaluation: {exc}", file=sys.stderr)
+        return 2
     ledger = SpendLedger(cache, run_cap_usd=args.max_usd)
     getter = file_getter(cache, settings.ersatz_cache_dir, args.pdf_dir)
     run = evaluate(gold, getter, llm, ledger, cache, cached_only=args.cached_only)
