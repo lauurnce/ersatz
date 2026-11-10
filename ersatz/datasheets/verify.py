@@ -56,6 +56,7 @@ def normalize(text: str) -> str:
     s = unicodedata.normalize("NFKC", text)
     s = re.sub(r"[\u00b5\u03bc]", "u", s)
     s = re.sub(r"[\u2010-\u2014\u2212]", "-", s)
+    s = re.sub(r"[\ue000-\uf8ff]", " ", s)  # symbol-font glyphs in private use
     return re.sub(r"\s+", " ", s).strip().casefold()
 
 

@@ -137,3 +137,13 @@ def test_features_are_checked() -> None:
 def test_all_pages_count_as_sent_by_default() -> None:
     raw = RawExtraction.model_validate({"parameters": [param()]})
     assert len(verify_quotes(raw, PAGES, Category.LDO).parameters) == 1
+
+
+def test_private_use_glyphs_are_ignored() -> None:
+    ge = chr(0xF0B3)
+    page = PageText(page=3, text=f"Maximum Output I 250 mA For V {ge}2.5V", chars=500)
+    p = param(page=3, name="iout", typ=None, max=None, min="250", unit="mA")
+    raw = RawExtraction.model_validate(
+        {"parameters": [{**p, "quote": "Maximum Output I 250 mA For V 2.5V"}]}
+    )
+    assert len(verify_quotes(raw, [page], Category.LDO).parameters) == 1
